@@ -1,0 +1,4 @@
+include 'hj-h212-parser'
+
+rootProject.name = 'hj-h212-parser'
+project(':hj-h212-parser').projectDir = new File('hj-h212-parser')

@@ -1,0 +1,79 @@
+
+buildscript {
+    ext {
+        springBootVersion = '1.5.1.RELEASE'
+        springfoxVersion = '2.6.0'
+        springVersion = '4.3.6.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven { url 'http://repo.spring.io/plugins-release' }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:1.0.2.RELEASE")
+        classpath("com.github.ksoichiro:gradle-build-info-plugin:0.2.0")
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
+        classpath 'net.researchgate:gradle-release:2.4.0'
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven{
+            url 'http://maven.aliyun.com/mvn/repository/'
+        }
+        flatDir {
+            dirs "$rootProject.projectDir/libs"
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor  0,'seconds'
+    }
+}
+
+project(':hj-h212-parser') {
+    group 'com.xy.format'
+    version "${version}"
+
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // JSON
+        compile group: 'javax.json.bind', name: 'javax.json.bind-api', version: '1.0'
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.3'
+
+
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
+        compile group: 'org.eclipse', name: 'yasson', version: '1.0.1'
+
+        compile group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
+
+
+        compile group: 'io.swagger', name: 'swagger-annotations', version: '1.5.10'
+        //Test
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+        testCompile 'org.reflections:reflections:0.9.11'
+        testCompile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+        testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    }
+}
