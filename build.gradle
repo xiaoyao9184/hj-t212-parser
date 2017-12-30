@@ -77,3 +77,23 @@ project(':hj-t212-parser') {
         testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     }
 }
+
+project(':hj-t212-translator') {
+    group 'com.xy.format'
+    version "${version}"
+
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        //Test
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}

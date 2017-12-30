@@ -1,4 +1,6 @@
 include 'hj-t212-parser'
+include 'hj-t212-translator'
 
 rootProject.name = 'hj-t212-parser'
 project(':hj-t212-parser').projectDir = new File('hj-t212-parser')
+project(':hj-t212-translator').projectDir = new File('translator')
