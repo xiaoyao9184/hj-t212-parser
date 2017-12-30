@@ -43,7 +43,7 @@ allprojects {
     }
 }
 
-project(':hj-h212-parser') {
+project(':hj-t212-parser') {
     group 'com.xy.format'
     version "${version}"
 

@@ -1,4 +1,4 @@
-include 'hj-h212-parser'
+include 'hj-t212-parser'
 
-rootProject.name = 'hj-h212-parser'
-project(':hj-h212-parser').projectDir = new File('hj-h212-parser')
+rootProject.name = 'hj-t212-parser'
+project(':hj-t212-parser').projectDir = new File('hj-t212-parser')
