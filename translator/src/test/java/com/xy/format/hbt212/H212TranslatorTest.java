@@ -1,6 +1,6 @@
 package com.xy.format.hbt212;
 
-import com.xy.format.hbt212.coding.GBT16706;
+import com.xy.format.hbt212.coding.System;
 import org.junit.Test;
 
 import javax.activation.UnsupportedDataTypeException;
@@ -14,8 +14,8 @@ public class H212TranslatorTest {
     @Test
     public void testTranslation() {
         try {
-            String mean = H212Translator.I.translation(GBT16706.class,"21");
-            assertEquals(GBT16706._21.mean(),mean);
+            String mean = H212Translator.I.translation(System.class,"21");
+            assertEquals(System._21.mean(),mean);
         } catch (UnsupportedDataTypeException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -33,11 +33,24 @@ public class H212TranslatorTest {
             e.printStackTrace();
         }
         try {
-            H212Translator.I.translation(GBT16706.class,"21-not");
+            H212Translator.I.translation(System.class,"21-not");
         } catch (UnsupportedDataTypeException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             assert true;
+        }
+    }
+
+    @Test
+    public void testExpand() {
+        try {
+            H212Translator.I.expand(System.class,"00","扩展",null);
+            String mean = H212Translator.I.translation(System.class,"00");
+            assertEquals("扩展",mean);
+        } catch (UnsupportedDataTypeException e) {
+            assert true;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
