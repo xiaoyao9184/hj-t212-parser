@@ -43,6 +43,48 @@ allprojects {
     }
 }
 
+
+project(':stream-reader') {
+    group 'com.xy.stream'
+    version "${version}"
+
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        //Test
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}
+
+project(':segment-parser') {
+    group 'com.xy.format'
+    version "${version}"
+
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compile project(':stream-reader')
+        //Test
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}
+
 project(':hj-t212-parser') {
     group 'com.xy.format'
     version "${version}"
