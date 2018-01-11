@@ -1,6 +1,8 @@
 package com.xy.format.segment.core;
 
 
+import com.xy.format.segment.base.cfger.Configurator;
+import com.xy.format.segment.base.cfger.Configured;
 import com.xy.stream.reader.core.ReaderStream;
 
 import java.io.Closeable;
@@ -12,14 +14,14 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.xy.format.segment.core.feature.ParserFeature.*;
+import static com.xy.format.segment.core.feature.SegmentParserFeature.*;
 import static com.xy.format.segment.core.SegmentToken.*;
 
 /**
  * Created by xiaoyao9184 on 2018/1/3.
  */
 public class SegmentParser
-        implements Closeable {
+        implements Closeable, Configured<SegmentParser> {
 
 //    private ParseContext context;
 
@@ -36,7 +38,7 @@ public class SegmentParser
     //TODO config
 
 
-//    public SegmentParser(PackParser packParser) throws IOException, FormatException {
+//    public SegmentParser(PackParser packParser) throws IOException, SegmentFormatException {
 //        super(null);
 //        char[] sc = packParser.readSegmentOnly();
 //        CharArrayReader reader = new CharArrayReader(sc);
@@ -443,6 +445,11 @@ public class SegmentParser
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void configured(Configurator<SegmentParser> by) {
+        by.config(this);
     }
 
 }
