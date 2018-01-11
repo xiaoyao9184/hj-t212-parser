@@ -4,7 +4,7 @@ package com.xy.format.segment.core.deser;
 
 import com.xy.format.segment.core.SegmentParser;
 import com.xy.format.segment.core.SegmentToken;
-import com.xy.format.segment.exception.FormatException;
+import com.xy.format.segment.exception.SegmentFormatException;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -32,7 +32,7 @@ public class MapSegmentDeserializer
 
 
     @Override
-    public Map<String, Object> deserialize(SegmentParser parser) throws IOException, FormatException {
+    public Map<String, Object> deserialize(SegmentParser parser) throws IOException, SegmentFormatException {
         if(parser.currentToken() == null){
             parser.initToken();
         }
@@ -43,7 +43,7 @@ public class MapSegmentDeserializer
     }
 
 
-    private void readMap(SegmentParser parser, Map<String, Object> result) throws IOException, FormatException {
+    private void readMap(SegmentParser parser, Map<String, Object> result) throws IOException, SegmentFormatException {
         String key = parser.readKey();
         for (; key != null; key = parser.readKey()) {
             SegmentToken token = parser.currentToken();

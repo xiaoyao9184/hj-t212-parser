@@ -2,7 +2,7 @@ package com.xy.format.segment.core.deser;
 
 import com.xy.format.segment.core.SegmentParser;
 import com.xy.format.segment.core.SegmentToken;
-import com.xy.format.segment.exception.FormatException;
+import com.xy.format.segment.exception.SegmentFormatException;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ public class MapValueSegmentDeserializer
     }
 
     @Override
-    public Object deserialize(SegmentParser parser) throws IOException, FormatException {
+    public Object deserialize(SegmentParser parser) throws IOException, SegmentFormatException {
         Object result = null;
         SegmentToken token = parser.currentToken();
         switch (token){

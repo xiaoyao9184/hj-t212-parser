@@ -1,7 +1,7 @@
 package com.xy.format.segment.core.deser;
 
 import com.xy.format.segment.core.SegmentParser;
-import com.xy.format.segment.exception.FormatException;
+import com.xy.format.segment.exception.SegmentFormatException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class StringMapSegmentDeserializerTest {
             assertEquals(map.get("CP"),"DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N");
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (FormatException e) {
+        } catch (SegmentFormatException e) {
             e.printStackTrace();
         }
     }
@@ -63,7 +63,7 @@ public class StringMapSegmentDeserializerTest {
             assertEquals(map.get("B"),"B1=b1;A=&&A1=a1;A2=a2;A3=a3&&");
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (FormatException e) {
+        } catch (SegmentFormatException e) {
             e.printStackTrace();
         }
     }

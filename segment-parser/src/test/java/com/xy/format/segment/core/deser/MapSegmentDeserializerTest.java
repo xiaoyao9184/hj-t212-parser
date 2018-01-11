@@ -1,7 +1,7 @@
 package com.xy.format.segment.core.deser;
 
 import com.xy.format.segment.core.SegmentParser;
-import com.xy.format.segment.exception.FormatException;
+import com.xy.format.segment.exception.SegmentFormatException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class MapSegmentDeserializerTest {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (FormatException e) {
+        } catch (SegmentFormatException e) {
             e.printStackTrace();
         }
     }
@@ -83,7 +83,7 @@ public class MapSegmentDeserializerTest {
             assertTrue(b instanceof Map);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (FormatException e) {
+        } catch (SegmentFormatException e) {
             e.printStackTrace();
         }
     }
