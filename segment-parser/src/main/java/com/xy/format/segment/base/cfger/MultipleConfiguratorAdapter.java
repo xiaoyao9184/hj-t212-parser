@@ -78,7 +78,7 @@ public abstract class MultipleConfiguratorAdapter
         return (configurator) -> Stream.of(configurator.getClass().getGenericInterfaces())
                 .filter(t -> t instanceof ParameterizedType)
                 .map(t -> (ParameterizedType)t)
-                .filter(pt -> pt.getOwnerType().equals(Configurator.class))
+                .filter(pt -> pt.getRawType().equals(Configurator.class))
                 .map(pt -> pt.getActualTypeArguments()[0])
                 .findFirst()
                 .orElse(java.lang.Object.class);
@@ -88,7 +88,7 @@ public abstract class MultipleConfiguratorAdapter
         return Stream.of(configurator.getClass().getGenericInterfaces())
                 .filter(t -> t instanceof ParameterizedType)
                 .map(t -> (ParameterizedType)t)
-                .filter(pt -> pt.getOwnerType().equals(Configurator.class))
+                .filter(pt -> pt.getRawType().equals(Configurator.class))
                 .map(pt -> pt.getActualTypeArguments()[0])
                 .anyMatch(t -> t.equals(target.getClass()));
     }

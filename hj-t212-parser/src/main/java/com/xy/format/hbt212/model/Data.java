@@ -1,143 +1,83 @@
 package com.xy.format.hbt212.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.xy.format.hbt212.core.validator.field.C;
+import com.xy.format.hbt212.core.validator.field.ValidDate;
+import com.xy.format.hbt212.model.verify.groups.ModeGroup;
+import com.xy.format.hbt212.model.verify.groups.VersionGroup;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.json.bind.annotation.JsonbProperty;
-import javax.validation.constraints.Pattern;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Created by xiaoyao9184 on 2017/12/15.
+ * 数据段
+ * Created by xiaoyao9184 on 2017/12/19.
  */
 public class Data {
 
-    @Pattern(regexp = "\\d{14}")
-    @JsonProperty("SystemTime")
-    @JsonbProperty("SystemTime")
-    private String systemTime;
-
-    @Pattern(regexp = "\\d{20}")
+    @ApiModelProperty(value = "请求编号", name = "QN")
+    @ValidDate(format = "yyyyMMddHHmmssSSS")
+    @ValidDate(format = "yyyyMMddHHmmssSSS", optional = false, groups = ModeGroup.Strict.class)
     @JsonProperty("QN")
     @JsonbProperty("QN")
     private String qn;
 
-    @Pattern(regexp = "\\d{3}")
-    @JsonProperty("QnRtn")
-    @JsonbProperty("QnRtn")
-    private String qnRtn;
-
-    @Pattern(regexp = "\\d{3}")
-    @JsonProperty("ExeRtn")
-    @JsonbProperty("ExeRtn")
-    private String exeRtn;
-
-    @Pattern(regexp = "\\d{4}")
-    @JsonProperty("RtdInterval")
-    @JsonbProperty("RtdInterval")
-    private String rtdInterval;
-
-    @JsonProperty("Pollution")
-    @JsonbProperty("Pollution")
-    private Map<String,DataPollution> pollution;
-
-    @Pattern(regexp = "\\d{14}")
-    @JsonbProperty("AlarmTime")
-    @JsonProperty("AlarmTime")
-    private String alarmTime;
-
-    @Pattern(regexp = "\\d")
-    @JsonbProperty("AlarmType")
-    @JsonProperty("AlarmType")
-    private String alarmType;
-
-    @Pattern(regexp = "\\d{20}")
-    @JsonbProperty("ReportTarget")
-    @JsonProperty("ReportTarget")
-    private String reportTarget;
-
-    @Pattern(regexp = "\\w{3}")
-    @JsonbProperty("PolId")
-    @JsonProperty("PolId")
-    private String polId;
-
-    @Pattern(regexp = "\\d{14}")
-    @JsonProperty("BeginTime")
-    @JsonbProperty("BeginTime")
-    private String beginTime;
-
-    @Pattern(regexp = "\\d{14}")
-    @JsonProperty("EndTime")
-    @JsonbProperty("EndTime")
-    private String endTime;
-
-    @Pattern(regexp = "\\d{14}")
-    @JsonProperty("DataTime")
-    @JsonbProperty("DataTime")
-    private String dataTime;
-
-    @Pattern(regexp = "\\d{4}")
-    @JsonProperty("ReportTime")
-    @JsonbProperty("ReportTime")
-    private String reportTime;
-
-    @Pattern(regexp = "\\d{14}")
-    @JsonProperty("DayStdValue")
-    @JsonbProperty("DayStdValue")
-    private String dayStdValue;
-
-    @Pattern(regexp = "\\d{14}")
-    @JsonProperty("NightStdValue")
-    @JsonbProperty("NightStdValue")
-    private String nightStdValue;
-
-    @JsonProperty("Flag")
-    @JsonbProperty("Flag")
-    private List<SegmentFlag> segmentFlag;
-
-    @Pattern(regexp = "\\d{4}")
-    @JsonProperty("PNO")
-    @JsonbProperty("PNO")
-    private String pNo;
-
-    @Pattern(regexp = "\\d{4}")
+    @ApiModelProperty(value = "总包号", name = "PNUM")
+    @Max(value = 9999)
+    @Min(value = 1, groups = ModeGroup.UseSubPacket.class)
     @JsonProperty("PNUM")
     @JsonbProperty("PNUM")
-    private String pNum;
+    private int pNum;
 
-    @Pattern(regexp = "\\w{6}")
+    @ApiModelProperty(value = "包号", name = "PNO")
+    @Max(value = 9999)
+    @Min(value = 1, groups = ModeGroup.UseSubPacket.class)
+    @JsonProperty("PNO")
+    @JsonbProperty("PNO")
+    private int pNo;
+
+    @ApiModelProperty(value = "系统编号", name = "ST")
+    @C(len = 2)
+    @NotBlank(groups = ModeGroup.Strict.class)
+    @JsonProperty("ST")
+    @JsonbProperty("ST")
+    private String st;
+
+    @ApiModelProperty(value = "命令编号", name = "CN")
+    @C(len = 4)
+    @NotBlank(groups = ModeGroup.Strict.class)
+    @JsonProperty("CN")
+    @JsonbProperty("CN")
+    private String cn;
+
+    @ApiModelProperty(value = "访问密码", name = "PW")
+    @C(len = 6)
+    @NotBlank(groups = ModeGroup.Strict.class)
     @JsonProperty("PW")
     @JsonbProperty("PW")
     private String pw;
 
-    @Pattern(regexp = "\\d{5}")
-    @JsonProperty("OverTime")
-    @JsonbProperty("OverTime")
-    private String overTime;
+    @ApiModelProperty(value = "设备唯一标识", name = "MN")
+    @C(len = 14, groups = VersionGroup.V2005.class)
+    @C(len = 24, groups = VersionGroup.V2017.class)
+    @NotBlank(groups = ModeGroup.Strict.class)
+    @JsonProperty("MN")
+    @JsonbProperty("MN")
+    private String mn;
 
-    @Pattern(regexp = "\\d{2}")
-    @JsonProperty("ReCount")
-    @JsonbProperty("ReCount")
-    private String reCount;
+    @ApiModelProperty(value = "是否拆分包及应答标志", name = "Flag")
+    @JsonProperty("Flag")
+    @JsonbProperty("Flag")
+    private List<DataFlag> dataFlag;
 
-    @Pattern(regexp = "\\d{5}")
-    @JsonProperty("WarnTime")
-    @JsonbProperty("WarnTime")
-    private String warnTime;
-
-    @Pattern(regexp = "\\d{2}")
-    @JsonProperty("CTime")
-    @JsonbProperty("CTime")
-    private String cTime;
-
-
-    public String getSystemTime() {
-        return systemTime;
-    }
-
-    public void setSystemTime(String systemTime) {
-        this.systemTime = systemTime;
-    }
+    @ApiModelProperty(value = "指令参数", name = "CP")
+    @Valid
+    @JsonProperty("CP")
+    @JsonbProperty("CP")
+    private CpData cp;
 
     public String getQn() {
         return qn;
@@ -147,140 +87,36 @@ public class Data {
         this.qn = qn;
     }
 
-    public String getQnRtn() {
-        return qnRtn;
-    }
-
-    public void setQnRtn(String qnRtn) {
-        this.qnRtn = qnRtn;
-    }
-
-    public String getExeRtn() {
-        return exeRtn;
-    }
-
-    public void setExeRtn(String exeRtn) {
-        this.exeRtn = exeRtn;
-    }
-
-    public String getRtdInterval() {
-        return rtdInterval;
-    }
-
-    public void setRtdInterval(String rtdInterval) {
-        this.rtdInterval = rtdInterval;
-    }
-
-    public String getAlarmTime() {
-        return alarmTime;
-    }
-
-    public void setAlarmTime(String alarmTime) {
-        this.alarmTime = alarmTime;
-    }
-
-    public String getAlarmType() {
-        return alarmType;
-    }
-
-    public void setAlarmType(String alarmType) {
-        this.alarmType = alarmType;
-    }
-
-    public String getReportTarget() {
-        return reportTarget;
-    }
-
-    public void setReportTarget(String reportTarget) {
-        this.reportTarget = reportTarget;
-    }
-
-    public String getPolId() {
-        return polId;
-    }
-
-    public void setPolId(String polId) {
-        this.polId = polId;
-    }
-
-    public String getBeginTime() {
-        return beginTime;
-    }
-
-    public void setBeginTime(String beginTime) {
-        this.beginTime = beginTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getDataTime() {
-        return dataTime;
-    }
-
-    public void setDataTime(String dataTime) {
-        this.dataTime = dataTime;
-    }
-
-    public String getReportTime() {
-        return reportTime;
-    }
-
-    public void setReportTime(String reportTime) {
-        this.reportTime = reportTime;
-    }
-
-    public String getDayStdValue() {
-        return dayStdValue;
-    }
-
-    public void setDayStdValue(String dayStdValue) {
-        this.dayStdValue = dayStdValue;
-    }
-
-    public String getNightStdValue() {
-        return nightStdValue;
-    }
-
-    public void setNightStdValue(String nightStdValue) {
-        this.nightStdValue = nightStdValue;
-    }
-
-    public Map<String, DataPollution> getPollution() {
-        return pollution;
-    }
-
-    public void setPollution(Map<String, DataPollution> pollution) {
-        this.pollution = pollution;
-    }
-
-    public List<SegmentFlag> getSegmentFlag() {
-        return segmentFlag;
-    }
-
-    public void setSegmentFlag(List<SegmentFlag> segmentFlag) {
-        this.segmentFlag = segmentFlag;
-    }
-
-    public String getpNo() {
-        return pNo;
-    }
-
-    public void setpNo(String pNo) {
-        this.pNo = pNo;
-    }
-
-    public String getpNum() {
+    public int getpNum() {
         return pNum;
     }
 
-    public void setpNum(String pNum) {
+    public void setpNum(int pNum) {
         this.pNum = pNum;
+    }
+
+    public int getpNo() {
+        return pNo;
+    }
+
+    public void setpNo(int pNo) {
+        this.pNo = pNo;
+    }
+
+    public String getSt() {
+        return st;
+    }
+
+    public void setSt(String st) {
+        this.st = st;
+    }
+
+    public String getCn() {
+        return cn;
+    }
+
+    public void setCn(String cn) {
+        this.cn = cn;
     }
 
     public String getPw() {
@@ -291,35 +127,28 @@ public class Data {
         this.pw = pw;
     }
 
-    public String getOverTime() {
-        return overTime;
+    public String getMn() {
+        return mn;
     }
 
-    public void setOverTime(String overTime) {
-        this.overTime = overTime;
+    public void setMn(String mn) {
+        this.mn = mn;
     }
 
-    public String getReCount() {
-        return reCount;
+    public List<DataFlag> getDataFlag() {
+        return dataFlag;
     }
 
-    public void setReCount(String reCount) {
-        this.reCount = reCount;
+    public void setDataFlag(List<DataFlag> dataFlag) {
+        this.dataFlag = dataFlag;
     }
 
-    public String getWarnTime() {
-        return warnTime;
+    public CpData getCp() {
+        return cp;
     }
 
-    public void setWarnTime(String warnTime) {
-        this.warnTime = warnTime;
+    public void setCp(CpData cp) {
+        this.cp = cp;
     }
 
-    public String getcTime() {
-        return cTime;
-    }
-
-    public void setcTime(String cTime) {
-        this.cTime = cTime;
-    }
 }

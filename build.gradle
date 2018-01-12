@@ -100,6 +100,8 @@ project(':hj-t212-parser') {
     }
 
     dependencies {
+
+        compile project(':segment-parser')
         // JSON
         compile group: 'javax.json.bind', name: 'javax.json.bind-api', version: '1.0'
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.3'
@@ -117,6 +119,9 @@ project(':hj-t212-parser') {
         testCompile 'org.reflections:reflections:0.9.11'
         testCompile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
         testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+        testCompile 'org.hibernate.validator:hibernate-validator:6.0.2.Final'
+        testCompile 'javax.el:javax.el-api:2.2.4'
+        testCompile 'org.glassfish.web:javax.el:2.2.4'
     }
 }
 

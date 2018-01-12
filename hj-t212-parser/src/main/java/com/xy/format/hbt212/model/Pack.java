@@ -1,14 +1,16 @@
 package com.xy.format.hbt212.model;
 
 /**
+ * 通信包
  * Created by xiaoyao9184 on 2017/12/15.
  */
 public class Pack {
-    private char[] header = new char[]{ '#','#' };
+
+    private char[] header = new char[2];
     private char[] length = new char[4];
     private char[] segment = new char[1024];
     private char[] crc = new char[4];
-    private char[] footer = new char[]{ '\r', '\n' };
+    private char[] footer = new char[2];
 
     public char[] getHeader() {
         return header;
@@ -30,7 +32,7 @@ public class Pack {
         return segment;
     }
 
-    public void setSegment(char[] segment) {
+    public void setData(char[] segment) {
         this.segment = segment;
     }
 
