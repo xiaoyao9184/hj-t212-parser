@@ -23,7 +23,7 @@ public class NValidatorTest {
 
         TestBean bean = new TestBean();
         bean.n1 = "1";
-        bean.n2_2 = "12.345";
+        bean.n2_2 = "120.345";
 
         Set<ConstraintViolation<TestBean>> e1 = validator.validate(bean,
                 Default.class);

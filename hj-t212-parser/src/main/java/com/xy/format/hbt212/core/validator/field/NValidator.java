@@ -34,27 +34,16 @@ public class NValidator implements ConstraintValidator<N, String> {
         if(optional && value == null){
             return true;
         }
-        return isValidFormat(format, value);
+//        return isValidFormat(format, value);
 
-
-//        int int_len = 0;
-//        int fraction_len = 0;
-//        BigDecimal decimal = new BigDecimal(value);
-//        int_len = significantDigits(decimal);
-//        fraction_len = decimal.scale();
-//
-//        if(value != null){
-//            int_len = value.indexOf('.');
-//            if(int_len != -1){
-//                fraction_len = value.length() - (int_len + 1);
-//            }else{
-//                int_len = value.length();
-//            }
-//        }
-//        return int_len <= int_len_max &&
-//                fraction_len <= fraction_len_max;
+        BigDecimal decimal = new BigDecimal(value);
+        int int_len = getNumLength(decimal.longValue());
+        int fraction_len = decimal.scale();
+        return int_len <= int_len_max &&
+                fraction_len <= fraction_len_max;
     }
 
+    @Deprecated
     public static boolean isValidFormat(String format, String value) {
         Number number = null;
         try {
@@ -72,10 +61,11 @@ public class NValidator implements ConstraintValidator<N, String> {
         return number != null;
     }
 
-    private static int significantDigits(BigDecimal input) {
-        input = input.stripTrailingZeros();
-        return input.scale() < 0
-                ? input.precision() - input.scale()
-                : input.precision();
+    private static int getNumLength(long num){
+        num = num>0?num:-num;
+        if (num==0) {
+            return 1;
+        }
+        return (int) Math.log10(num)+1;
     }
 }
