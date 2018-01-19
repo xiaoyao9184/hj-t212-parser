@@ -4,7 +4,11 @@ import com.xy.format.hbt212.exception.T212FormatException;
 import com.xy.format.hbt212.model.DataFlag;
 import com.xy.format.hbt212.model.verify.DataElement;
 import com.xy.format.hbt212.model.verify.PacketElement;
+import com.xy.format.hbt212.model.verify.T212Map;
 import com.xy.format.hbt212.model.verify.T212MapEntry;
+import com.xy.format.hbt212.model.verify.groups.ModeGroup;
+import com.xy.format.hbt212.model.verify.groups.T212MapLevelGroup;
+import com.xy.format.hbt212.model.verify.groups.VersionGroup;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.Configured;
 import com.xy.format.hbt212.core.T212Parser;
@@ -17,6 +21,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import javax.validation.groups.Default;
 import java.io.CharArrayReader;
 import java.io.IOException;
 import java.io.PushbackReader;
@@ -26,6 +31,7 @@ import java.util.stream.Stream;
 
 import static com.xy.format.hbt212.core.T212Parser.crc16Checkout;
 import static com.xy.format.hbt212.core.feature.VerifyFeature.*;
+import static com.xy.format.hbt212.core.validator.clazz.FieldValidator.create_format_exception;
 
 /**
  * 数据段 级别 反序列化器
@@ -38,6 +44,7 @@ public class DataLevelMapDeserializer
     private Configurator<SegmentParser> segmentParserConfigurator;
     private int verifyFeature;
     private SegmentDeserializer<Map<String,String>> dataDeserializer;
+    private Validator validator;
 
 //    private int version;
 
@@ -47,6 +54,7 @@ public class DataLevelMapDeserializer
         configurator.config(this);
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public Map<String, String> deserialize(T212Parser parser) throws IOException, T212FormatException {
         parser.configured(parserConfigurator);
@@ -85,21 +93,64 @@ public class DataLevelMapDeserializer
             T212FormatException.segment_exception(e);
         }
 
-//        if(result.containsKey(DataElement.Flag.name())){
-//            String f = result.get(DataElement.Flag.name());
-//            int flag = Integer.valueOf(f);
-//
-//            if(DataFlag.V0.isMarked(flag)){
-//                version = DataFlag.V0.getBit();
-//            }
-//        }else{
-//            version = 0;
-//        }
-
-        verify(result);
+        verifyByType(result);
         return result;
     }
 
+    private void verifyByType(Map<String, String> result) throws T212FormatException {
+        List<Class> groups = new ArrayList<>();
+        groups.add(Default.class);
+        T212Map t212Map = T212Map.createDataLevel(result);
+
+        int flag = 0;
+
+        if(result.containsKey(DataElement.Flag.name())){
+            String f = result.get(DataElement.Flag.name());
+            flag = Integer.valueOf(f);
+        }
+        if(DataFlag.V0.isMarked(flag)){
+            groups.add(VersionGroup.V2017.class);
+        }else{
+            groups.add(VersionGroup.V2005.class);
+        }
+        if(DataFlag.D.isMarked(flag)){
+            groups.add(ModeGroup.UseSubPacket.class);
+        }
+
+        Set<ConstraintViolation<T212Map>> constraintViolationSet = validator.validate(t212Map,groups.toArray(new Class[]{}));
+        if(!constraintViolationSet.isEmpty()) {
+            create_format_exception(constraintViolationSet);
+        }
+    }
+
+    @Deprecated
+    private void verifyByVersion(Map<String, String> result) throws T212FormatException {
+        List<Class> groups = new ArrayList<>();
+        groups.add(Default.class);
+        groups.add(T212MapLevelGroup.DataLevel.class);
+
+        int flag = 0;
+        T212Map t212Map;
+        if(result.containsKey(DataElement.Flag.name())){
+            String f = result.get(DataElement.Flag.name());
+            flag = Integer.valueOf(f);
+        }
+        if(DataFlag.V0.isMarked(flag)){
+            t212Map = T212Map.create2017(result);
+        }else{
+            t212Map = T212Map.create2005(result);
+        }
+        if(DataFlag.D.isMarked(flag)){
+            groups.add(ModeGroup.UseSubPacket.class);
+        }
+
+        Set<ConstraintViolation<T212Map>> constraintViolationSet = validator.validate(t212Map,groups.toArray(new Class[]{}));
+        if(!constraintViolationSet.isEmpty()) {
+            create_format_exception(constraintViolationSet);
+        }
+    }
+
+    @Deprecated
     private void verify(Map<String, String> result) throws T212FormatException {
         if(!ALLOW_MISSING_FIELD.enabledIn(verifyFeature)){
             Stream<DataElement> stream = Stream.of(DataElement.values())
@@ -188,5 +239,9 @@ public class DataLevelMapDeserializer
 
     public void setDataDeserializer(SegmentDeserializer<Map<String, String>> dataDeserializer) {
         this.dataDeserializer = dataDeserializer;
+    }
+
+    public void setValidator(Validator validator) {
+        this.validator = validator;
     }
 }

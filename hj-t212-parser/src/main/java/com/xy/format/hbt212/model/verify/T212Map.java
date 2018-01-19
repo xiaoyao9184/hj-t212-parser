@@ -1,15 +1,5 @@
 package com.xy.format.hbt212.model.verify;
 
-import com.xy.format.hbt212.core.validator.clazz.FieldC;
-import com.xy.format.hbt212.core.validator.clazz.FieldN;
-import com.xy.format.hbt212.core.validator.clazz.FieldValidDate;
-import com.xy.format.hbt212.core.validator.field.C;
-import com.xy.format.hbt212.core.validator.field.N;
-import com.xy.format.hbt212.core.validator.field.ValidDate;
-import com.xy.format.hbt212.model.verify.groups.ModeGroup;
-import com.xy.format.hbt212.model.verify.groups.T212MapLevelGroup;
-import com.xy.format.hbt212.model.verify.groups.VersionGroup;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
@@ -22,39 +12,39 @@ import java.util.Set;
  */
 //@FieldMissing(groups = T212Map.Group.DataLevel.class)
 //@ValueRange(groups = T212Map.Group.DataLevel.class)
-@FieldValidDate(field = "QN",
-        value = @ValidDate(field = "QN", format = "yyyyMMddHHmmssSSS"))
-@FieldValidDate(field = "QN", groups = ModeGroup.Strict.class,
-        value = @ValidDate(field = "QN", format = "yyyyMMddHHmmssSSS", optional = false))
-@FieldC(field = "ST",
-        value = @C(len = 2))
-//@NotBlank(groups = ModeGroup.Strict.class)
-@FieldC(field = "CN",
-        value = @C(len = 4))
-//@NotBlank(groups = ModeGroup.Strict.class)
-@FieldC(field = "PW",
-        value = @C(len = 6))
-//@NotBlank(groups = ModeGroup.Strict.class)
-@FieldC(field = "MN", groups = VersionGroup.V2005.class,
-        value = @C(len = 14))
-@FieldC(field = "MN", groups = VersionGroup.V2017.class,
-        value = @C(len = 24))
-//@NotBlank(groups = ModeGroup.Strict.class)
-@FieldC(field = "Flag",
-        value = @C(len = 1))
-@FieldN(field = "PNUM",
-        value = @N(integer = 4))
-//@Min(value = 1, groups = ModeGroup.UseSubPacket.class)
-@FieldN(field = "PNO",
-        value = @N(integer = 4))
-//@Min(value = 1, groups = ModeGroup.UseSubPacket.class)
-//TODO 本意为组取交，无法实现
-//@FieldC(field = "CP", groups = { VersionGroup.V2005.class, T212MapLevelGroup.DataLevel.class },
-//        value = @C(len = 950))
-//@FieldC(field = "CP", groups = { VersionGroup.V2017.class, T212MapLevelGroup.DataLevel.class },
-//        value = @C(len = 960))
-
-//TODO CP级别的数据验证
+//@FieldValidDate(field = "QN",
+//        value = @ValidDate(field = "QN", format = "yyyyMMddHHmmssSSS"))
+////@FieldValidDate(field = "QN", groups = ModeGroup.Strict.class,
+////        value = @ValidDate(field = "QN", format = "yyyyMMddHHmmssSSS", optional = false))
+//@FieldC(field = "ST",
+//        value = @C(len = 2))
+////@NotBlank(groups = ModeGroup.Strict.class)
+//@FieldC(field = "CN",
+//        value = @C(len = 4))
+////@NotBlank(groups = ModeGroup.Strict.class)
+//@FieldC(field = "PW",
+//        value = @C(len = 6))
+////@NotBlank(groups = ModeGroup.Strict.class)
+//@FieldC(field = "MN", groups = VersionGroup.V2005.class,
+//        value = @C(len = 14))
+//@FieldC(field = "MN", groups = VersionGroup.V2017.class,
+//        value = @C(len = 24))
+////@NotBlank(groups = ModeGroup.Strict.class)
+//@FieldC(field = "Flag",
+//        value = @C(len = 1))
+//@FieldN(field = "PNUM",
+//        value = @N(integer = 4))
+////@Min(value = 1, groups = ModeGroup.UseSubPacket.class)
+//@FieldN(field = "PNO",
+//        value = @N(integer = 4))
+////@Min(value = 1, groups = ModeGroup.UseSubPacket.class)
+////TODO 本意为组取交，无法实现
+////@FieldC(field = "CP", groups = { VersionGroup.V2005.class, T212MapLevelGroup.DataLevel.class },
+////        value = @C(len = 950))
+////@FieldC(field = "CP", groups = { VersionGroup.V2017.class, T212MapLevelGroup.DataLevel.class },
+////        value = @C(len = 960))
+//
+////TODO CP级别的数据验证
 public class T212Map<K,V>
         implements Map<K,V>, Serializable {
 
@@ -66,6 +56,22 @@ public class T212Map<K,V>
 
     public static <K,V> T212Map<K,V> create(Map<K,V> map){
         return new T212Map<>(map);
+    }
+
+    public static <K,V> T212Map<K,V> create2005(Map<K,V> map) {
+        return new T212MapV2005<>(map);
+    }
+
+    public static <K,V> T212Map<K,V> create2017(Map<K,V> map) {
+        return new T212MapV2017<>(map);
+    }
+
+    public static T212Map<String,String> createDataLevel(Map<String,String> map) {
+        return new T212DataLevelMap(map);
+    }
+
+    public static T212Map<String,Object> createCpDataLevel(Map<String,Object> map) {
+        return new T212CpDataLevelMap(map);
     }
 
     @Override
@@ -127,4 +133,5 @@ public class T212Map<K,V>
     public Set<Entry<K, V>> entrySet() {
         return m.entrySet();
     }
+
 }

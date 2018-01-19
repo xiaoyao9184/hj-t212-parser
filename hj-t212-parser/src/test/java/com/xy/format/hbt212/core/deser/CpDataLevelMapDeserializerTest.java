@@ -8,6 +8,7 @@ import com.xy.format.hbt212.exception.T212FormatException;
 import com.xy.format.segment.base.cfger.Feature;
 import org.junit.Test;
 
+import javax.validation.Validation;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 public class CpDataLevelMapDeserializerTest {
 
     @Test
-    public void test(){
+    public void testDeserialize(){
         String data = "##0139ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
         StringReader reader = new StringReader(data);
         T212Parser t212Parser = new T212Parser(reader);
@@ -32,6 +33,7 @@ public class CpDataLevelMapDeserializerTest {
         vFeature = vFeature | ALLOW_MISSING_FIELD.getMask();
         vFeature = vFeature | ALLOW_VALUE_NOT_IN_RANGE.getMask();
         configurator.setVerifyFeature(vFeature);
+        configurator.setValidator(Validation.buildDefaultValidatorFactory().getValidator());
         configurator.setParserFeature(Feature.collectFeatureDefaults(ParserFeature.class));
         CpDataLevelMapDeserializer deserializer = new CpDataLevelMapDeserializer();
         deserializer.configured(configurator);
@@ -59,4 +61,5 @@ public class CpDataLevelMapDeserializerTest {
             e.printStackTrace();
         }
     }
+
 }

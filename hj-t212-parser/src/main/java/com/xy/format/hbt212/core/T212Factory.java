@@ -2,9 +2,11 @@ package com.xy.format.hbt212.core;
 
 import com.xy.format.hbt212.core.cfger.T212Configurator;
 import com.xy.format.hbt212.core.deser.T212Deserializer;
-import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.Configured;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.*;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -15,12 +17,37 @@ import java.util.stream.Stream;
  * T212工厂
  * Created by xiaoyao9184 on 2018/1/10.
  */
-public enum T212Factory {
-
-    I;
+public class T212Factory {
 
     private T212Configurator configurator = new T212Configurator();
     final protected HashMap<Type, T212Deserializer<Object>> _rootDeserializers = new HashMap<>();
+
+
+
+    public T212Factory(){
+
+    }
+
+    public T212Factory(T212Configurator configurator){
+        this.configurator = configurator;
+    }
+
+    public T212Factory copy() {
+        T212Factory factory = new T212Factory();
+        factory.setConfigurator(this.configurator);
+        factory._rootDeserializers.putAll(this._rootDeserializers);
+        return factory;
+    }
+
+
+
+    public T212Configurator getConfigurator() {
+        return configurator;
+    }
+
+    public void setConfigurator(T212Configurator configurator) {
+        this.configurator = configurator;
+    }
 
     /**
      * 创建解析器
@@ -29,8 +56,9 @@ public enum T212Factory {
      */
     public T212Parser parser(InputStream is) {
         InputStreamReader dis = new InputStreamReader(is);
-        T212Parser t212Parser = new T212Parser(dis);
-        return t212Parser;
+        T212Parser parser = new T212Parser(dis);
+        parser.configured(configurator);
+        return parser;
     }
 
     /**
@@ -48,8 +76,9 @@ public enum T212Factory {
      * @return 解析器
      */
     public T212Parser parser(Reader reader) {
-        T212Parser t212Parser = new T212Parser(reader);
-        return t212Parser;
+        T212Parser parser = new T212Parser(reader);
+        parser.configured(configurator);
+        return parser;
     }
 
     /**
@@ -85,6 +114,15 @@ public enum T212Factory {
         return deserializer;
     }
 
+    public <T> T212Deserializer<T> deserializerFor(Type type, Class<T> tClass) {
+        T212Deserializer<T> deserializer = (T212Deserializer<T>) _rootDeserializers.get(type);
+        if(deserializer instanceof Configured){
+            Configured configured = (Configured) deserializer;
+            configured.configured(configurator);
+        }
+        return deserializer;
+    }
+
 
     /**
      * 注册类型反序列化器
@@ -113,4 +151,8 @@ public enum T212Factory {
         _rootDeserializers.put(type,deserializerClass.newInstance());
     }
 
+    public Validator validator() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        return factory.getValidator();
+    }
 }

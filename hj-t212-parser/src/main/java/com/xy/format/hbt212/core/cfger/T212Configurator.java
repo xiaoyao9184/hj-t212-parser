@@ -4,18 +4,15 @@ import com.xy.format.hbt212.core.deser.CpDataLevelMapDeserializer;
 import com.xy.format.hbt212.core.deser.DataDeserializer;
 import com.xy.format.hbt212.core.deser.DataLevelMapDeserializer;
 import com.xy.format.segment.base.cfger.Configurator;
-import com.xy.format.segment.base.cfger.Configured;
 import com.xy.format.segment.base.cfger.MultipleConfiguratorAdapter;
 import com.xy.format.hbt212.core.T212Parser;
 import com.xy.format.hbt212.core.deser.PackLevelDeserializer;
 import com.xy.format.segment.core.SegmentParser;
 import com.xy.format.segment.core.deser.MapSegmentDeserializer;
-import com.xy.format.segment.core.deser.SegmentDeserializer;
 import com.xy.format.segment.core.deser.StringMapSegmentDeserializer;
 
+import javax.validation.Validator;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,9 +23,14 @@ import java.util.stream.Stream;
 public class T212Configurator
         extends MultipleConfiguratorAdapter {
 
-    private int verifyFeature;
+    private int segmentParserFeature;
     private int parserFeature;
+    private int verifyFeature;
+    private Validator validator;
 
+    public void setSegmentParserFeature(int segmentParserFeature) {
+        this.segmentParserFeature = segmentParserFeature;
+    }
 
     public void setParserFeature(int parserFeature) {
         this.parserFeature = parserFeature;
@@ -37,6 +39,11 @@ public class T212Configurator
     public void setVerifyFeature(int verifyFeature) {
         this.verifyFeature = verifyFeature;
     }
+
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
+
 
     class SegmentParserConfigurator implements Configurator<SegmentParser>{
         @Override
@@ -102,6 +109,7 @@ public class T212Configurator
         if(parser.currentToken() == null){
             parser.initToken();
         }
+        parser.setParserFeature(segmentParserFeature);
     }
 
     /**
@@ -130,6 +138,7 @@ public class T212Configurator
      */
     public void configure(DataLevelMapDeserializer deserializer){
         deserializer.setVerifyFeature(verifyFeature);
+        deserializer.setValidator(validator);
         deserializer.setParserConfigurator(this::configure);
         deserializer.setSegmentParserConfigurator(this::configure);
         deserializer.setDataDeserializer(new StringMapSegmentDeserializer());
@@ -142,6 +151,7 @@ public class T212Configurator
      */
     public void configure(CpDataLevelMapDeserializer deserializer){
         deserializer.setVerifyFeature(verifyFeature);
+        deserializer.setValidator(validator);
         deserializer.setParserConfigurator(this::configure);
         deserializer.setSegmentParserConfigurator(this::configure);
         deserializer.setDataDeserializer(new MapSegmentDeserializer());

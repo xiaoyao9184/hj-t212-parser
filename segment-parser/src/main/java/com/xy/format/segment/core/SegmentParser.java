@@ -438,6 +438,10 @@ public class SegmentParser
         currentToken = START_OBJECT_VALUE;
     }
 
+    public void setParserFeature(int parserFeature) {
+        this.parserFeature = parserFeature;
+    }
+
     @Override
     public void close(){
         try {
