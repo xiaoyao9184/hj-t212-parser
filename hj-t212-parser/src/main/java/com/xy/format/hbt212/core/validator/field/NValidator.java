@@ -31,8 +31,8 @@ public class NValidator implements ConstraintValidator<N, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        if(optional && value == null){
-            return true;
+        if(value == null){
+            return optional;
         }
 //        return isValidFormat(format, value);
 
