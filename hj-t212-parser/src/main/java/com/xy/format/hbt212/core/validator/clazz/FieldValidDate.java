@@ -33,6 +33,8 @@ public @interface FieldValidDate {
 
     boolean optional() default false;
 
+    boolean regex() default false;
+
     /**
      * Defines several {@link FieldValidDate} annotations on the same element.
      *
