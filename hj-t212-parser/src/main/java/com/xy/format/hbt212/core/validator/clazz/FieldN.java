@@ -33,6 +33,8 @@ public @interface FieldN {
 
     boolean optional() default false;
 
+    boolean regex() default false;
+
     /**
      * Defines several {@link FieldN} annotations on the same element.
      *

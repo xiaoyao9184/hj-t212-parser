@@ -35,6 +35,8 @@ FieldC {
 
     boolean optional() default false;
 
+    boolean regex() default false;
+
     /**
      * Defines several {@link FieldC} annotations on the same element.
      *

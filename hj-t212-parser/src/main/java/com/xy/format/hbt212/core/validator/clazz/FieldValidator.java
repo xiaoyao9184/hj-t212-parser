@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public abstract class FieldValidator<A extends Annotation,V,AF extends Annotation,FV>
         implements ConstraintValidator<A, V> {
 
-    private String field;
+    protected String field;
     private AF af;
     private ConstraintValidator<AF,FV> constraintValidator;
 
