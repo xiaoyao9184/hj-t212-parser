@@ -32,6 +32,16 @@ public @interface N {
      */
     int fraction() default 0;
 
+    /**
+     * @return 最小值
+     */
+    double min() default -1;
+
+    /**
+     * @return 最大值
+     */
+    double max() default -1;
+
     String message() default "invalid N type";
 
     Class<?>[] groups() default {};
@@ -39,6 +49,7 @@ public @interface N {
     Class<? extends Payload>[] payload() default {};
 
     boolean optional() default true;
+
 
     /**
      * Defines several {@link N} annotations on the same element.

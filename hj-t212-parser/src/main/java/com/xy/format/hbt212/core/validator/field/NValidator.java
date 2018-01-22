@@ -5,7 +5,6 @@ import javax.validation.ConstraintValidatorContext;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.Collections;
 
 /**
  * Created by xiaoyao9184 on 2018/1/10.
@@ -14,19 +13,23 @@ public class NValidator implements ConstraintValidator<N, String> {
 
     private int int_len_max;
     private int fraction_len_max;
-    private String format;
+    private double min;
+    private double max;
+//    private String format;
     private boolean optional;
 
     @Override
     public void initialize(N n) {
         this.int_len_max = n.integer();
         this.fraction_len_max = n.fraction();
+        this.min = n.min();
+        this.max = n.max();
         this.optional = n.optional();
 
-        format = String.join("", Collections.nCopies(int_len_max,"#"));
-        if(fraction_len_max > 0){
-            format = format + "." + String.join("", Collections.nCopies(fraction_len_max,"#"));
-        }
+//        format = String.join("", Collections.nCopies(int_len_max,"#"));
+//        if(fraction_len_max > 0){
+//            format = format + "." + String.join("", Collections.nCopies(fraction_len_max,"#"));
+//        }
     }
 
     @Override
@@ -39,8 +42,18 @@ public class NValidator implements ConstraintValidator<N, String> {
         BigDecimal decimal = new BigDecimal(value);
         int int_len = getNumLength(decimal.longValue());
         int fraction_len = decimal.scale();
-        return int_len <= int_len_max &&
+        boolean result = int_len <= int_len_max &&
                 fraction_len <= fraction_len_max;
+
+        if(min > 0 &&
+                decimal.doubleValue() < min){
+            return false;
+        }
+        if(max > 0 &&
+                decimal.doubleValue() > max){
+            return false;
+        }
+        return result;
     }
 
     @Deprecated
