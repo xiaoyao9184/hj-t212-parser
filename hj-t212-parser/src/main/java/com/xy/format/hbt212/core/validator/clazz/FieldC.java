@@ -20,8 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Repeatable(FieldC.List.class)
 @Constraint(validatedBy = T212MapCValidator.class)
-public @interface
-FieldC {
+public @interface FieldC {
 
     String field() default "";
 
