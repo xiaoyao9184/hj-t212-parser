@@ -23,8 +23,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = {ValidDateValidator.class, T212MapValidDateValidator.class})
 public @interface ValidDate {
 
-    String field() default "";
-
     String format();
 
     String message() default "invalid date";

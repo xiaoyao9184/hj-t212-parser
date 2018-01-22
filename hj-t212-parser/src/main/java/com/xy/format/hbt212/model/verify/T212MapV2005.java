@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by xiaoyao9184 on 2018/1/10.
  */
 @FieldValidDate(field = "QN",
-        value = @ValidDate(field = "QN", format = "yyyyMMddHHmmssSSS"))
+        value = @ValidDate(format = "yyyyMMddHHmmssSSS"))
 @FieldC(field = "ST",
         value = @C(len = 2))
 @FieldC(field = "CN",

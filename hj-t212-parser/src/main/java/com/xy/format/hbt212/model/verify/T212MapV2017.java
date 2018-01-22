@@ -18,7 +18,7 @@ import java.util.Map;
 //@FieldMissing(groups = T212Map.Group.DataLevel.class)
 //@ValueRange(groups = T212Map.Group.DataLevel.class)
 @FieldValidDate(field = "QN",
-        value = @ValidDate(field = "QN", format = "yyyyMMddHHmmssSSS"))
+        value = @ValidDate(format = "yyyyMMddHHmmssSSS"))
 //@FieldValidDate(field = "QN", groups = ModeGroup.Strict.class,
 //        value = @ValidDate(field = "QN", format = "yyyyMMddHHmmssSSS", optional = false))
 @FieldC(field = "ST",
