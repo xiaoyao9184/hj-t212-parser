@@ -73,7 +73,7 @@ public class SegmentParser
         //当前Token
         switch (currentToken){
             case END_KEY:
-                throw new IOException("Cant next key after END_KEY token!");
+                throw new IOException("Cant read key after END_KEY token!");
             case END_OBJECT_VALUE:
                 //“&&”字符串后面跟着“,”“;”认为是相同的，需要读出来，
                 // 避免被认为是当前是孤立KEY
@@ -280,13 +280,13 @@ public class SegmentParser
             case END_SUB_ENTRY:
             case END_PART_KEY:
             case END_OBJECT_VALUE:
-                throw new IOException("Cant next value after " + currentToken.name() + " token!");
+                throw new IOException("Cant read value after " + currentToken.name() + " token!");
             case START_OBJECT_VALUE:
                 if(onlyObject){
                     //当前的值不是Object
                     basic = false;
                 }else{
-                    throw new IOException("Cant next base value after " + currentToken.name() + " token!");
+                    throw new IOException("Cant read base value after " + currentToken.name() + " token!");
                 }
                 break;
         }
