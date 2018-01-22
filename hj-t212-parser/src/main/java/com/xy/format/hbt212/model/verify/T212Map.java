@@ -66,11 +66,11 @@ public class T212Map<K,V>
         return new T212MapV2017<>(map);
     }
 
-    public static T212Map<String,String> createDataLevel(Map<String,String> map) {
+    public static T212DataLevelMap createDataLevel(Map<String,String> map) {
         return new T212DataLevelMap(map);
     }
 
-    public static T212Map<String,Object> createCpDataLevel(Map<String,Object> map) {
+    public static T212CpDataLevelMap createCpDataLevel(Map<String,Object> map) {
         return new T212CpDataLevelMap(map);
     }
 
