@@ -5,6 +5,7 @@ import com.xy.format.hbt212.exception.T212FormatException;
 import com.xy.format.hbt212.model.DataFlag;
 import com.xy.format.hbt212.model.verify.PacketElement;
 import com.xy.format.hbt212.model.verify.DataElement;
+import com.xy.format.hbt212.model.verify.T212CpDataLevelMap;
 import com.xy.format.hbt212.model.verify.T212Map;
 import com.xy.format.hbt212.model.verify.groups.ModeGroup;
 import com.xy.format.hbt212.model.verify.groups.T212MapLevelGroup;
@@ -93,7 +94,8 @@ public class CpDataLevelMapDeserializer
     private void verifyByType(Map<String, Object> result) throws T212FormatException {
         List<Class> groups = new ArrayList<>();
         groups.add(Default.class);
-        T212Map t212Map = T212Map.createCpDataLevel(result);
+        T212CpDataLevelMap t212Map = T212Map.createCpDataLevel(result);
+        T212CpDataLevelMap.Cp cp = t212Map.getCp();
 
         int flag = 0;
 
@@ -111,6 +113,9 @@ public class CpDataLevelMapDeserializer
         }
 
         Set<ConstraintViolation<T212Map>> constraintViolationSet = validator.validate(t212Map,groups.toArray(new Class[]{}));
+        Set<ConstraintViolation<T212Map>> constraintViolationSet2 = validator.validate(cp,groups.toArray(new Class[]{}));
+        constraintViolationSet.addAll(constraintViolationSet2);
+
         if(!constraintViolationSet.isEmpty()) {
             create_format_exception(constraintViolationSet);
         }
