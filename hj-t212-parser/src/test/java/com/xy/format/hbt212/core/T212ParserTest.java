@@ -2,16 +2,12 @@ package com.xy.format.hbt212.core;
 
 import com.xy.format.hbt212.core.feature.ParserFeature;
 import com.xy.format.hbt212.exception.T212FormatException;
-import com.xy.format.hbt212.model.Pack;
-import com.xy.format.hbt212.model.verify.PacketElement;
 import com.xy.format.segment.base.cfger.Feature;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.PushbackReader;
+import java.io.IOException;
 import java.io.StringReader;
 
-import static com.xy.format.hbt212.core.feature.ParserFeature.FOOTER_CONSTANT;
 import static org.junit.Assert.*;
 
 /**
@@ -53,6 +49,50 @@ public class T212ParserTest {
             e.printStackTrace();
         } finally {
             parser.close();
+        }
+    }
+
+    @Test
+    public void testFeature_HEADER_CONSTANT() {
+        String data = "0#";
+        StringReader reader = new StringReader(data);
+        T212Parser parser = new T212Parser(reader);
+        parser.setParserFeature(ParserFeature.HEADER_CONSTANT.getMask());
+        try {
+            parser.readHeader();
+        } catch (IOException | T212FormatException e) {
+            assertTrue(e.getMessage().contains("Static"));
+        }
+
+        reader = new StringReader(data);
+        parser = new T212Parser(reader);
+        try {
+            char[] h = parser.readHeader();
+            assertArrayEquals(h,new char[]{'0','#'});
+        } catch (IOException | T212FormatException e) {
+            assert false;
+        }
+    }
+
+    @Test
+    public void testFeature_FOOTER_CONSTANT() {
+        String data = "\r\r";
+        StringReader reader = new StringReader(data);
+        T212Parser parser = new T212Parser(reader);
+        parser.setParserFeature(ParserFeature.FOOTER_CONSTANT.getMask());
+        try {
+            parser.readFooter();
+        } catch (IOException | T212FormatException e) {
+            assertTrue(e.getMessage().contains("Static"));
+        }
+
+        reader = new StringReader(data);
+        parser = new T212Parser(reader);
+        try {
+            char[] f = parser.readFooter();
+            assertArrayEquals(f,new char[]{'\r','\r'});
+        } catch (IOException | T212FormatException e) {
+            assert false;
         }
     }
 
