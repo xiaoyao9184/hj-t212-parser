@@ -1,11 +1,13 @@
 package com.xy.format.segment.core;
 
+import com.xy.format.segment.core.feature.SegmentParserFeature;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SegmentParserTest {
 
@@ -86,6 +88,78 @@ public class SegmentParserTest {
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    public void testFeature_IGNORE_INVAILD_SYMBOL() {
+        String data = "ST&=31;";
+        StringReader reader = new StringReader(data);
+        SegmentParser parser = new SegmentParser(reader);
+        parser.initToken();
+        try {
+            parser.readPathKey();
+        } catch (IOException e) {
+            assertTrue(e.getMessage().contains("Invaild"));
+        }
+
+        reader = new StringReader(data);
+        parser = new SegmentParser(reader);
+        parser.initToken();
+        int parserFeature = SegmentParserFeature.IGNORE_INVAILD_SYMBOL.getMask();
+        parser.setParserFeature(parserFeature);
+        try {
+            parser.readPathKey();
+        } catch (IOException e) {
+            assert false;
+        }
+    }
+
+    @Test
+    public void testFeature_ALLOW_ISOLATED_KEY() {
+        String data = "ST;";
+        StringReader reader = new StringReader(data);
+        SegmentParser parser = new SegmentParser(reader);
+        parser.initToken();
+        try {
+            parser.readPathKey();
+        } catch (IOException e) {
+            assertTrue(e.getMessage().contains("Missing"));
+        }
+
+        reader = new StringReader(data);
+        parser = new SegmentParser(reader);
+        parser.initToken();
+        int parserFeature = SegmentParserFeature.ALLOW_ISOLATED_KEY.getMask();
+        parser.setParserFeature(parserFeature);
+        try {
+            parser.readPathKey();
+        } catch (IOException e) {
+            assert false;
+        }
+    }
+
+    @Test
+    public void testFeature_ALLOW_KEY_NOT_CLOSED() {
+        String data = "ST&&ST1=1&&";
+        StringReader reader = new StringReader(data);
+        SegmentParser parser = new SegmentParser(reader);
+        parser.initToken();
+        try {
+            parser.readPathKey();
+        } catch (IOException e) {
+            assertTrue(e.getMessage().contains("Missing"));
+        }
+
+        reader = new StringReader(data);
+        parser = new SegmentParser(reader);
+        parser.initToken();
+        int parserFeature = SegmentParserFeature.ALLOW_KEY_NOT_CLOSED.getMask();
+        parser.setParserFeature(parserFeature);
+        try {
+            parser.readPathKey();
+        } catch (IOException e) {
+            assert false;
+        }
     }
 
 }

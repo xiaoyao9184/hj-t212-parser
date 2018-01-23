@@ -20,17 +20,13 @@ public enum SegmentParserFeature implements Feature {
     /**
      * 允许NULL的KEY出现
      */
+    @Deprecated
     ALLOW_NULL_KEY(false),
 
     /**
      * 允许KEY不闭合
      */
-    ALLOW_KEY_NOT_CLOSED(true),
-
-    /**
-     * 校验常量尾
-     */
-    VERIFY_FOOTER_CONSTANT(true);
+    ALLOW_KEY_NOT_CLOSED(true);
 
 
     private final boolean _defaultState;
