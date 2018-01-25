@@ -13,6 +13,4 @@ public interface Parser<Target>
         extends Closeable {
 
     Target parse() throws T212FormatException, IOException;
-
-    //TODO 版本支持
 }

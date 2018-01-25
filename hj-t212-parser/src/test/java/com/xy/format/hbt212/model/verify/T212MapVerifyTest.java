@@ -28,7 +28,7 @@ public class T212MapVerifyTest {
 
     @Before
     public void init(){
-        dataLevel = T212Map.create(new HashMap<>());
+        dataLevel = T212Map.createDataLevel(new HashMap<>());
         dataLevel.put("QN","20180101123010123");
         dataLevel.put("ST","12");
         dataLevel.put("CN","1234");
@@ -39,7 +39,7 @@ public class T212MapVerifyTest {
         dataLevel.put("PNO","0");
         dataLevel.put("CP",String.join("", Collections.nCopies(950,"#")));
 
-        cpDataLevel = T212Map.create(new HashMap<>());
+        cpDataLevel = T212Map.createCpDataLevel(new HashMap<>());
         cpDataLevel.putAll(dataLevel);
         cpDataLevel.remove("CP");
         Map<String,String> cp = new HashMap<>();
@@ -73,7 +73,12 @@ public class T212MapVerifyTest {
         cp.put("Stime","120");
         cp.put("InfoId","123456");
 
-        //TODO 污染物
+        cp.put("B01-Rtd","36.91");
+        cp.put("011-Rtd","231.0");
+        cp.put("011-Flag","N");
+        cp.put("060-Rtd","1.803");
+        cp.put("060-Flag","N");
+
     }
 
     @Test

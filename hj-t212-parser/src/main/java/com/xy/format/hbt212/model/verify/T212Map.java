@@ -38,13 +38,13 @@ import java.util.Set;
 //@FieldN(field = "PNO",
 //        value = @N(integer = 4))
 ////@Min(value = 1, groups = ModeGroup.UseSubPacket.class)
-////TODO 本意为组取交，无法实现
+//// 本意为组取交，无法实现
 ////@FieldC(field = "CP", groups = { VersionGroup.V2005.class, T212MapLevelGroup.DataLevel.class },
 ////        value = @C(len = 950))
 ////@FieldC(field = "CP", groups = { VersionGroup.V2017.class, T212MapLevelGroup.DataLevel.class },
 ////        value = @C(len = 960))
 //
-////TODO CP级别的数据验证
+////CP级别的数据验证
 public class T212Map<K,V>
         implements Map<K,V>, Serializable {
 

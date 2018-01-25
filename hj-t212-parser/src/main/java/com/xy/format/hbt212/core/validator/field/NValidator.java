@@ -67,7 +67,7 @@ public class NValidator implements ConstraintValidator<N, String> {
             DecimalFormat sdf = new DecimalFormat(format);
             if (value != null){
                 number = sdf.parse(value);
-                //TODO 12345 + #### = 12345 位数不对
+                //12345 + #### = 12345 位数不对
                 if (!value.equals(sdf.format(number))) {
                     number = null;
                 }
