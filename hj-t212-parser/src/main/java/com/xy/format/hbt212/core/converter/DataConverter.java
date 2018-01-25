@@ -3,9 +3,10 @@ package com.xy.format.hbt212.core.converter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xy.format.hbt212.base.Converter;
 import com.xy.format.hbt212.model.*;
-import com.xy.format.hbt212.model.mixin.DataMixin;
 import com.xy.format.hbt212.model.verify.DataElement;
 import com.xy.format.hbt212.model.verify.T212Map;
+import com.xy.format.segment.base.cfger.Configurator;
+import com.xy.format.segment.base.cfger.Configured;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
@@ -16,7 +17,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 /**
  * 转换器
@@ -25,13 +25,14 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
  * Created by xiaoyao9184 on 2017/12/15.
  */
 public class DataConverter
-        implements Converter<T212Map<String,Object>,Data> {
+        implements Converter<T212Map<String,Object>,Data>,
+        Configured<DataConverter> {
 
     private static String REGEX_DEVICE = "SB.*-RS$|SB.*-RT$";
     private static String REGEX_LIVE_SIDE = ".*-Info$|.*-SN$";
     private static String REGEX_POLLUTION = ".*-.*";
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper;
 
     private Predicate<String> predicateDevice;
     private Predicate<String> predicateLiveSide;
@@ -43,9 +44,9 @@ public class DataConverter
         predicateLiveSide = Pattern.compile(REGEX_LIVE_SIDE).asPredicate();
         predicatePollution = Pattern.compile(REGEX_POLLUTION).asPredicate();
 
-        objectMapper
-                .configure(FAIL_ON_UNKNOWN_PROPERTIES,false)
-                .addMixIn(Data.class, DataMixin.class);
+//        objectMapper
+//                .configure(FAIL_ON_UNKNOWN_PROPERTIES,false)
+//                .addMixIn(Data.class, DataMixin.class);
     }
 
 
@@ -213,5 +214,14 @@ public class DataConverter
     @Override
     public Data convert(T212Map<String,Object> map) {
         return convertDataLevel(map);
+    }
+
+    @Override
+    public void configured(Configurator<DataConverter> by) {
+        by.config(this);
+    }
+
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 }

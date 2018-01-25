@@ -9,6 +9,7 @@ import com.xy.format.hbt212.model.CpData;
 import com.xy.format.hbt212.model.Data;
 import com.xy.format.hbt212.model.Pollution;
 import com.xy.format.segment.base.cfger.Feature;
+import com.xy.format.segment.core.feature.SegmentParserFeature;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -16,8 +17,6 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import static com.xy.format.hbt212.core.feature.VerifyFeature.ALLOW_MISSING_FIELD;
-import static com.xy.format.hbt212.core.feature.VerifyFeature.ALLOW_VALUE_NOT_IN_RANGE;
 import static org.junit.Assert.*;
 
 /**
@@ -29,18 +28,19 @@ public class DataDeserializerTest {
     public void test(){
         String t212 = "##0139ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
         StringReader reader = new StringReader(t212);
-        T212Parser t212Parser = new T212Parser(reader);
-        T212Configurator configurator = new T212Configurator();
-        int vFeature = Feature.collectFeatureDefaults(VerifyFeature.class);
-        vFeature = vFeature | ALLOW_MISSING_FIELD.getMask();
-//        vFeature = vFeature | ALLOW_VALUE_NOT_IN_RANGE.getMask();
-        configurator.setVerifyFeature(vFeature);
-        configurator.setParserFeature(Feature.collectFeatureDefaults(ParserFeature.class));
+        T212Parser parser = new T212Parser(reader);
         DataDeserializer deserializer = new DataDeserializer();
+
+        T212Configurator configurator = new T212Configurator();
+        configurator.setVerifyFeature(Feature.collectFeatureDefaults(VerifyFeature.class));
+        configurator.setParserFeature(Feature.collectFeatureDefaults(ParserFeature.class));
+        configurator.setSegmentParserFeature(Feature.collectFeatureDefaults(SegmentParserFeature.class));
+
+        parser.configured(configurator);
         deserializer.configured(configurator);
 
-        try (T212Parser parser = t212Parser) {
-            Data data = deserializer.deserialize(parser);
+        try (T212Parser p = parser) {
+            Data data = deserializer.deserialize(p);
 
             assertNotNull(data);
             assertEquals(data.getSt(),"32");
@@ -68,4 +68,5 @@ public class DataDeserializerTest {
             e.printStackTrace();
         }
     }
+
 }

@@ -1,8 +1,12 @@
 package com.xy.format.hbt212.core.cfger;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xy.format.hbt212.core.converter.DataConverter;
 import com.xy.format.hbt212.core.deser.CpDataLevelMapDeserializer;
 import com.xy.format.hbt212.core.deser.DataDeserializer;
 import com.xy.format.hbt212.core.deser.DataLevelMapDeserializer;
+import com.xy.format.hbt212.model.Data;
+import com.xy.format.hbt212.model.mixin.DataMixin;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.MultipleConfiguratorAdapter;
 import com.xy.format.hbt212.core.T212Parser;
@@ -16,6 +20,8 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+
 /**
  * T212配置器
  * Created by xiaoyao9184 on 2018/1/9.
@@ -27,6 +33,7 @@ public class T212Configurator
     private int parserFeature;
     private int verifyFeature;
     private Validator validator;
+    private ObjectMapper objectMapper;
 
     public void setSegmentParserFeature(int segmentParserFeature) {
         this.segmentParserFeature = segmentParserFeature;
@@ -42,6 +49,10 @@ public class T212Configurator
 
     public void setValidator(Validator validator) {
         this.validator = validator;
+    }
+
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
 
@@ -81,6 +92,12 @@ public class T212Configurator
             T212Configurator.this.configure(parser);
         }
     }
+    class DataConverterConfigurator implements Configurator<DataConverter>{
+        @Override
+        public void config(DataConverter converter) {
+            T212Configurator.this.configure(converter);
+        }
+    }
 
     @Override
     public Collection<Configurator> configurators() {
@@ -90,7 +107,8 @@ public class T212Configurator
                 new PackLevelDeserializerConfigurator(),
                 new DataLevelMapDeserializerConfigurator(),
                 new CpDataLevelMapDeserializerConfigurator(),
-                new DataDeserializerConfigurator()
+                new DataDeserializerConfigurator(),
+                new DataConverterConfigurator()
 //                (Configurator<SegmentParser>)this::configure,
 //                (Configurator<T212Parser>)this::configure,
 //                (Configurator<PackLevelDeserializer>)this::configure,
@@ -164,9 +182,24 @@ public class T212Configurator
      */
     public void configure(DataDeserializer deserializer){
         deserializer.setVerifyFeature(verifyFeature);
-        deserializer.setParserConfigurator(this::configure);
         deserializer.setSegmentParserConfigurator(this::configure);
-        deserializer.setDataDeserializer(new MapSegmentDeserializer());
+        deserializer.setDataConverterConfigurator(this::configure);
+        deserializer.setSegmentDeserializer(new MapSegmentDeserializer());
+    }
+
+    /**
+     * 泛型方法实现
+     * @see Configurator#config(Object)
+     * @param dataConverter
+     */
+    public void configure(DataConverter dataConverter){
+        ObjectMapper objectMapper = this.objectMapper;
+        if(objectMapper == null){
+            objectMapper = new ObjectMapper()
+                    .configure(FAIL_ON_UNKNOWN_PROPERTIES,false)
+                    .addMixIn(Data.class, DataMixin.class);
+        }
+        dataConverter.setObjectMapper(objectMapper);
     }
 
 }

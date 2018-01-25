@@ -37,11 +37,10 @@ import static com.xy.format.hbt212.core.feature.VerifyFeature.*;
 public class DataDeserializer
         implements T212Deserializer<Data>, Configured<DataDeserializer> {
 
-    private Configurator<T212Parser> parserConfigurator;
-    private Configurator<SegmentParser> segmentParserConfigurator;
     private int verifyFeature;
-    private SegmentDeserializer<Map<String,Object>> dataDeserializer;
-    private DataConverter converter = new DataConverter();
+    private Configurator<SegmentParser> segmentParserConfigurator;
+    private Configurator<DataConverter> dataConverterConfigurator;
+    private SegmentDeserializer<Map<String,Object>> segmentDeserializer;
 
 //    private int version;
 
@@ -54,8 +53,6 @@ public class DataDeserializer
     @SuppressWarnings("Duplicates")
     @Override
     public Data deserialize(T212Parser parser) throws IOException, T212FormatException {
-        parser.configured(parserConfigurator);
-
         parser.readHeader();
         int len = parser.readInt32(10);
         if(len == -1){
@@ -74,26 +71,27 @@ public class DataDeserializer
             }
         }
         parser.readFooter();
-
-        PushbackReader reader = new PushbackReader(new CharArrayReader(data));
-        SegmentParser segmentParser = new SegmentParser(reader);
-        return deserialize(segmentParser);
+        return deserialize(data);
     }
 
-    public Data deserialize(SegmentParser parser) throws IOException, T212FormatException {
+    public Data deserialize(char[] data) throws IOException, T212FormatException {
+        PushbackReader reader = new PushbackReader(new CharArrayReader(data));
+        SegmentParser parser = new SegmentParser(reader);
         parser.configured(segmentParserConfigurator);
 
         Map<String,Object> result = null;
         try {
-            result = dataDeserializer.deserialize(parser);
+            result = segmentDeserializer.deserialize(parser);
         } catch (SegmentFormatException e) {
             T212FormatException.segment_exception(e);
         }
         return deserialize(result);
     }
 
-    public Data deserialize(Map<String,Object> map) throws IOException, T212FormatException {
-        Data result = converter.convert(T212Map.create(map));
+    public Data deserialize(Map<String,Object> map) throws T212FormatException {
+        DataConverter dataConverter = new DataConverter();
+        dataConverter.configured(dataConverterConfigurator);
+        Data result = dataConverter.convert(T212Map.create(map));
 
         verify(result);
         return result;
@@ -130,15 +128,16 @@ public class DataDeserializer
         this.verifyFeature = verifyFeature;
     }
 
-    public void setParserConfigurator(Configurator<T212Parser> parserConfigurator) {
-        this.parserConfigurator = parserConfigurator;
-    }
-
     public void setSegmentParserConfigurator(Configurator<SegmentParser> segmentParserConfigurator) {
         this.segmentParserConfigurator = segmentParserConfigurator;
     }
 
-    public void setDataDeserializer(SegmentDeserializer<Map<String, Object>> dataDeserializer) {
-        this.dataDeserializer = dataDeserializer;
+    public void setDataConverterConfigurator(Configurator<DataConverter> mapperConfigurator) {
+        this.dataConverterConfigurator = mapperConfigurator;
     }
+
+    public void setSegmentDeserializer(SegmentDeserializer<Map<String, Object>> segmentDeserializer) {
+        this.segmentDeserializer = segmentDeserializer;
+    }
+
 }
