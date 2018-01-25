@@ -21,12 +21,24 @@ public enum VerifyFeature implements Feature {
     /**
      * 允许字段丢失
      */
+    @Deprecated
     ALLOW_MISSING_FIELD(false),
 
     /**
      * 允许值不在范围
      */
+    @Deprecated
     ALLOW_VALUE_NOT_IN_RANGE(false),
+
+    /**
+     * 启动校验
+     */
+    USE_VERIFICATION(true),
+
+    /**
+     * 校验失败报错
+     */
+    THROW_ERROR_VERIFICATION_FAILED(true),
 
     /**
      * 严格模式

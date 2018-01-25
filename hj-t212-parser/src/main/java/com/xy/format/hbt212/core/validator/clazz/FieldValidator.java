@@ -53,7 +53,7 @@ public abstract class FieldValidator<A extends Annotation,V,AF extends Annotatio
     public abstract FV getFieldValue(V value,String field);
     public abstract String getFieldMessage(AF value);
 
-    public static void create_format_exception(Set<? extends ConstraintViolation> constraintViolationSet) throws T212FormatException {
+    public static void create_format_exception(Set<? extends ConstraintViolation> constraintViolationSet, Object result) throws T212FormatException {
         Map<String, String> typePropertys = constraintViolationSet
                 .stream()
                 .collect(Collectors.groupingBy(
@@ -93,7 +93,8 @@ public abstract class FieldValidator<A extends Annotation,V,AF extends Annotatio
                         + " -> "
                         + kv.getValue())
                 .collect(Collectors.joining("\n"));
-        throw new T212FormatException("Validate error\n" + msg);
+        throw new T212FormatException("Validate error\n" + msg)
+                .withResult(result);
     }
 
     public static void create_format_exception2(Set<? extends ConstraintViolation> constraintViolationSet) throws T212FormatException {

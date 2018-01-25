@@ -93,7 +93,9 @@ public class DataLevelMapDeserializer
             T212FormatException.segment_exception(e);
         }
 
-        verifyByType(result);
+        if(!USE_VERIFICATION.enabledIn(verifyFeature)){
+            verifyByType(result);
+        }
         return result;
     }
 
@@ -119,7 +121,11 @@ public class DataLevelMapDeserializer
 
         Set<ConstraintViolation<T212Map>> constraintViolationSet = validator.validate(t212Map,groups.toArray(new Class[]{}));
         if(!constraintViolationSet.isEmpty()) {
-            create_format_exception(constraintViolationSet);
+            if(THROW_ERROR_VERIFICATION_FAILED.enabledIn(verifyFeature)){
+                create_format_exception(constraintViolationSet,result);
+            }else{
+                //TODO set context
+            }
         }
     }
 
@@ -146,7 +152,7 @@ public class DataLevelMapDeserializer
 
         Set<ConstraintViolation<T212Map>> constraintViolationSet = validator.validate(t212Map,groups.toArray(new Class[]{}));
         if(!constraintViolationSet.isEmpty()) {
-            create_format_exception(constraintViolationSet);
+            create_format_exception(constraintViolationSet,result);
         }
     }
 

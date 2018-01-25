@@ -117,7 +117,7 @@ public class CpDataLevelMapDeserializer
         constraintViolationSet.addAll(constraintViolationSet2);
 
         if(!constraintViolationSet.isEmpty()) {
-            create_format_exception(constraintViolationSet);
+            create_format_exception(constraintViolationSet,result);
         }
     }
 
@@ -144,7 +144,7 @@ public class CpDataLevelMapDeserializer
 
         Set<ConstraintViolation<T212Map>> constraintViolationSet = validator.validate(t212Map,groups.toArray(new Class[]{}));
         if(!constraintViolationSet.isEmpty()) {
-            create_format_exception(constraintViolationSet);
+            create_format_exception(constraintViolationSet,result);
         }
     }
 

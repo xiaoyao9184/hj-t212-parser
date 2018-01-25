@@ -14,8 +14,7 @@ import java.io.StringReader;
 import java.util.Collections;
 import java.util.Map;
 
-import static com.xy.format.hbt212.core.feature.VerifyFeature.ALLOW_MISSING_FIELD;
-import static com.xy.format.hbt212.core.feature.VerifyFeature.ALLOW_VALUE_NOT_IN_RANGE;
+import static com.xy.format.hbt212.core.feature.VerifyFeature.*;
 import static org.junit.Assert.*;
 
 /**
@@ -55,35 +54,43 @@ public class DataLevelMapDeserializerTest {
     }
 
     @Test
-    public void testVerify(){
+    public void testFeature_USE_VERIFICATION(){
         String data = "##0139ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
 
-        String a = String.join("", Collections.nCopies(1024 - 139 - 7,"#"));
+        //CP length cant bigger than 960 in version 2005
+        String a = String.join("", Collections.nCopies(960,"#"));
         data = data.replace("060-Flag=N&&4980","060-Flag=N" + a + "&&4980");
-        data = data.replace("0139ST=32;","1024ST=32;Flag=6;");
+        data = data.replace("0139ST=32;","1098ST=32");
+
+        T212Configurator configurator = new T212Configurator();
+        configurator.setValidator(Validation.buildDefaultValidatorFactory().getValidator());
+        int vFeature = THROW_ERROR_VERIFICATION_FAILED.getMask();
+        configurator.setVerifyFeature(vFeature);
 
         StringReader reader = new StringReader(data);
-        T212Parser t212Parser = new T212Parser(reader);
-        T212Configurator configurator = new T212Configurator();
-        int vFeature = Feature.collectFeatureDefaults(VerifyFeature.class);
-        vFeature = vFeature | ALLOW_MISSING_FIELD.getMask();
-        vFeature = vFeature | ALLOW_VALUE_NOT_IN_RANGE.getMask();
-        configurator.setVerifyFeature(vFeature);
-        configurator.setValidator(Validation.buildDefaultValidatorFactory().getValidator());
-        configurator.setParserFeature(Feature.collectFeatureDefaults(ParserFeature.class));
+        T212Parser parser = new T212Parser(reader);
         DataLevelMapDeserializer deserializer = new DataLevelMapDeserializer();
         deserializer.configured(configurator);
-
-        try (T212Parser parser = t212Parser) {
-            deserializer.deserialize(parser);
-        } catch (T212FormatException e) {
-            e.printStackTrace();
-            assert true;
-            return;
-        } catch (IOException e) {
-            e.printStackTrace();
+        try (T212Parser p = parser) {
+            deserializer.deserialize(p);
+        } catch (T212FormatException | IOException e) {
+            assertTrue(e.getMessage().contains("Validate"));
         }
-        assert false;
+
+        vFeature = vFeature | USE_VERIFICATION.getMask();
+        configurator.setVerifyFeature(vFeature);
+
+        reader = new StringReader(data);
+        parser = new T212Parser(reader);
+        deserializer = new DataLevelMapDeserializer();
+        deserializer.configured(configurator);
+        try (T212Parser p = parser) {
+            Map<String, String> map = deserializer.deserialize(p);
+            assertNotNull(map);
+        } catch (T212FormatException | IOException e) {
+            e.printStackTrace();
+            assert false;
+        }
     }
 
 }
