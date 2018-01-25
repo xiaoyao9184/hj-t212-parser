@@ -1,5 +1,6 @@
 package com.xy.format.hbt212.core;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xy.format.hbt212.core.cfger.T212Configurator;
 import com.xy.format.hbt212.core.deser.*;
 import com.xy.format.hbt212.core.feature.ParserFeature;
@@ -50,12 +51,14 @@ public class T212Mapper {
     private T212Factory factory;
     private T212Configurator configurator;
     private Validator validator;
+    private ObjectMapper objectMapper;
 
 
     public T212Mapper(){
         this.factory = t212FactoryProtoType.copy();
         this.configurator = new T212Configurator();
         this.validator = factory.validator();
+        this.objectMapper = factory.objectMapper();
     }
 
 
@@ -116,18 +119,23 @@ public class T212Mapper {
         return this;
     }
 
-    private T212Mapper buildCfg(){
+    public ObjectMapper objectMapper(){
+        return this.objectMapper;
+    }
+
+    private T212Mapper applyConfigurator(){
         configurator.setSegmentParserFeature(this.parserFeatures >> SEGMENT_FEATURE_BIT_OFFSET);
         configurator.setParserFeature(this.parserFeatures & 0x00FF);
         configurator.setVerifyFeature(this.verifyFeatures);
         configurator.setValidator(this.validator);
+        configurator.setObjectMapper(this.objectMapper);
         factory.setConfigurator(configurator);
         return this;
     }
 
     /*
     /**********************************************************
-    /* Public API (from ObjectCodec): deserialization
+    /* Public API : read
     /* (mapping from T212 to Java types);
     /* main methods
     /**********************************************************
@@ -136,22 +144,22 @@ public class T212Mapper {
 
 
     public <T> T readValue(InputStream is, Class<T> value) throws IOException, T212FormatException {
-        buildCfg();
+        applyConfigurator();
         return _readValueAndClose(factory.parser(is),value);
     }
 
     public <T> T readValue(byte[] bytes, Class<T> value) throws IOException, T212FormatException {
-        buildCfg();
+        applyConfigurator();
         return _readValueAndClose(factory.parser(bytes),value);
     }
 
     public <T> T readValue(Reader reader, Class<T> value) throws IOException, T212FormatException {
-        buildCfg();
+        applyConfigurator();
         return _readValueAndClose(factory.parser(reader),value);
     }
 
     public <T> T readValue(String data, Class<T> value) throws IOException, T212FormatException {
-        buildCfg();
+        applyConfigurator();
         return _readValueAndClose(factory.parser(data),value);
     }
 
@@ -159,6 +167,8 @@ public class T212Mapper {
         T212Deserializer<T> deserializer = factory.deserializerFor(value);
         try(T212Parser p = parser){
             return deserializer.deserialize(p);
+        }catch (RuntimeException e){
+            throw new T212FormatException("Runtime error",e);
         }
     }
 
@@ -166,6 +176,8 @@ public class T212Mapper {
         T212Deserializer<T> deserializer = factory.deserializerFor(type,value);
         try(T212Parser p = parser){
             return deserializer.deserialize(p);
+        }catch (RuntimeException e){
+            throw new T212FormatException("Runtime error",e);
         }
     }
 
@@ -234,28 +246,117 @@ public class T212Mapper {
         }.getClass().getGenericInterfaces()[0];
     }
 
+    private static Supplier<Type> getDeepMapGenericType(){
+        return () -> new Map<String,Object>(){
+            @Override
+            public int size() {
+                return 0;
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+
+            @Override
+            public boolean containsKey(Object key) {
+                return false;
+            }
+
+            @Override
+            public boolean containsValue(Object value) {
+                return false;
+            }
+
+            @Override
+            public String get(Object key) {
+                return null;
+            }
+
+            @Override
+            public String put(String key, Object value) {
+                return null;
+            }
+
+            @Override
+            public String remove(Object key) {
+                return null;
+            }
+
+            @Override
+            public void putAll(Map<? extends String, ? extends Object> m) {
+
+            }
+
+            @Override
+            public void clear() {
+
+            }
+
+            @Override
+            public Set<String> keySet() {
+                return null;
+            }
+
+            @Override
+            public Collection<Object> values() {
+                return null;
+            }
+
+            @Override
+            public Set<Entry<String, Object>> entrySet() {
+                return null;
+            }
+        }.getClass().getGenericInterfaces()[0];
+    }
+
     public Map<String,String> readMap(InputStream is) throws IOException, T212FormatException {
-        buildCfg();
+        applyConfigurator();
         //noinspection unchecked
         return _readValueAndClose(factory.parser(is),getMapGenericType().get(),Map.class);
     }
 
     public Map<String,String> readMap(byte[] bytes) throws IOException, T212FormatException {
-        buildCfg();
+        applyConfigurator();
         //noinspection unchecked
         return _readValueAndClose(factory.parser(bytes),getMapGenericType().get(),Map.class);
     }
 
     public Map<String,String> readMap(Reader reader) throws IOException, T212FormatException {
-        buildCfg();
+        applyConfigurator();
         //noinspection unchecked
         return _readValueAndClose(factory.parser(reader),getMapGenericType().get(),Map.class);
     }
 
     public Map<String,String> readMap(String data) throws IOException, T212FormatException {
-        buildCfg();
+        applyConfigurator();
         //noinspection unchecked
         return _readValueAndClose(factory.parser(data),getMapGenericType().get(),Map.class);
+    }
+
+
+    public Map<String,Object> readDeepMap(InputStream is) throws IOException, T212FormatException {
+        applyConfigurator();
+        //noinspection unchecked
+        return _readValueAndClose(factory.parser(is),getDeepMapGenericType().get(),Map.class);
+    }
+
+    public Map<String,Object> readDeepMap(byte[] bytes) throws IOException, T212FormatException {
+        applyConfigurator();
+        //noinspection unchecked
+        return _readValueAndClose(factory.parser(bytes),getDeepMapGenericType().get(),Map.class);
+    }
+
+    public Map<String,Object> readDeepMap(Reader reader) throws IOException, T212FormatException {
+        applyConfigurator();
+        //noinspection unchecked
+        return _readValueAndClose(factory.parser(reader),getDeepMapGenericType().get(),Map.class);
+    }
+
+    public Map<String,Object> readDeepMap(String data) throws IOException, T212FormatException {
+        applyConfigurator();
+        //noinspection unchecked
+        return _readValueAndClose(factory.parser(data),getDeepMapGenericType().get(),Map.class);
     }
 
 

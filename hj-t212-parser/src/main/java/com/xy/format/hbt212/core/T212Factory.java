@@ -1,5 +1,6 @@
 package com.xy.format.hbt212.core;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xy.format.hbt212.core.cfger.T212Configurator;
 import com.xy.format.hbt212.core.deser.T212Deserializer;
 import com.xy.format.segment.base.cfger.Configured;
@@ -154,5 +155,9 @@ public class T212Factory {
     public Validator validator() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         return factory.getValidator();
+    }
+
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }
