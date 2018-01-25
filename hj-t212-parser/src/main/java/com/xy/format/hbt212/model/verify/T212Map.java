@@ -54,14 +54,17 @@ public class T212Map<K,V>
         this.m = m;
     }
 
+    @Deprecated
     public static <K,V> T212Map<K,V> create(Map<K,V> map){
         return new T212Map<>(map);
     }
 
+    @Deprecated
     public static <K,V> T212Map<K,V> create2005(Map<K,V> map) {
         return new T212MapV2005<>(map);
     }
 
+    @Deprecated
     public static <K,V> T212Map<K,V> create2017(Map<K,V> map) {
         return new T212MapV2017<>(map);
     }

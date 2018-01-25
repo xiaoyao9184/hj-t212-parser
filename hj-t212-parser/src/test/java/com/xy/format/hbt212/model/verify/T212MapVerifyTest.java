@@ -100,14 +100,14 @@ public class T212MapVerifyTest {
                         Map.Entry::getKey,
                         kv -> kv.getValue() + "---------------"
                 ));
-        T212Map t212Map = T212Map.create(m);
+        T212Map t212Map = T212Map.createDataLevel(m);
 
         Set<ConstraintViolation<T212Map>> e2005 = validator.validate(t212Map,Default.class,
-                T212MapLevelGroup.DataLevel.class, VersionGroup.V2005.class);
-        assertTrue(e2005.size()>=t212Map.size());
+                VersionGroup.V2005.class);
+        assertTrue(e2005.size() > 0);
         Set<ConstraintViolation<T212Map>> e2017 = validator.validate(t212Map,Default.class,
-                T212MapLevelGroup.DataLevel.class, VersionGroup.V2017.class);
-        assertTrue(e2017.size()>=t212Map.size());
+                VersionGroup.V2017.class);
+        assertTrue(e2017.size() > 0);
     }
 
     @Test
@@ -144,14 +144,14 @@ public class T212MapVerifyTest {
                 ));
         data.put("CP",cp);
 
-        T212Map t212Map = T212Map.create(data);
+        T212Map t212Map = T212Map.createCpDataLevel(data);
 
         Set<ConstraintViolation<T212Map>> e2005 = validator.validate(t212Map,Default.class,
-                T212MapLevelGroup.DataLevel.class, VersionGroup.V2005.class);
-        assertTrue(e2005.size()>=(t212Map.size()-1));
+                VersionGroup.V2005.class);
+        assertTrue(e2005.size() > 0);
         Set<ConstraintViolation<T212Map>> e2017 = validator.validate(t212Map,Default.class,
-                T212MapLevelGroup.DataLevel.class, VersionGroup.V2017.class);
-        assertTrue(e2017.size()>=(t212Map.size()-1));
+                VersionGroup.V2017.class);
+        assertTrue(e2017.size() > 0);
     }
 
 }

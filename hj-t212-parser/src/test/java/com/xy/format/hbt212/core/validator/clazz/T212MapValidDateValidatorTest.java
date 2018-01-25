@@ -20,8 +20,7 @@ import static org.junit.Assert.*;
  */
 public class T212MapValidDateValidatorTest {
 
-
-    public Map<String,Object> map;
+    public Map<String,String> map;
 
     @Before
     public void init(){
@@ -35,7 +34,7 @@ public class T212MapValidDateValidatorTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        T212Map t212Map = T212Map.create(map);
+        T212Map t212Map = T212Map.createDataLevel(map);
 
         Set<ConstraintViolation<T212Map>> e0 = validator.validate(t212Map,
                 Default.class);
