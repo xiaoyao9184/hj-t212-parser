@@ -131,8 +131,8 @@ public class CpData {
     private String nightStdValue;
 
 
-    @JsonProperty("Flag")
-    @JsonbProperty("Flag")
+//    @JsonProperty("Flag")
+//    @JsonbProperty("Flag")
     private List<DataFlag> dataFlag;
 
     @Max(value = 9999, groups = VersionGroup.V2005.class)

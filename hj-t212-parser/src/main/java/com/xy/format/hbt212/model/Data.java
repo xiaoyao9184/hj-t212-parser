@@ -69,8 +69,8 @@ public class Data {
     private String mn;
 
     @ApiModelProperty(value = "是否拆分包及应答标志", name = "Flag")
-    @JsonProperty("Flag")
-    @JsonbProperty("Flag")
+//    @JsonProperty("Flag")
+//    @JsonbProperty("Flag")
     private List<DataFlag> dataFlag;
 
     @ApiModelProperty(value = "指令参数", name = "CP")
