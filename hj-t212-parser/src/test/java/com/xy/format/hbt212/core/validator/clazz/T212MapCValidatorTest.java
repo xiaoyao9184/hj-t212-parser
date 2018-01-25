@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class T212MapCValidatorTest {
 
-    public Map<String,Object> map;
+    public Map<String,String> map;
 
     @Before
     public void init(){
@@ -35,7 +35,7 @@ public class T212MapCValidatorTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        T212Map t212Map = T212Map.create(map);
+        T212Map t212Map = T212Map.createDataLevel(map);
 
         Set<ConstraintViolation<T212Map>> e1 = validator.validate(t212Map,
                 Default.class);

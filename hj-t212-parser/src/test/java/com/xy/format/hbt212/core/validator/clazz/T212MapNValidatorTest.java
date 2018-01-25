@@ -1,6 +1,7 @@
 package com.xy.format.hbt212.core.validator.clazz;
 
 import com.xy.format.hbt212.model.verify.T212Map;
+import com.xy.format.hbt212.model.verify.groups.ModeGroup;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,14 +21,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class T212MapNValidatorTest {
 
-
-    public Map<String,Object> map;
+    public Map<String,String> map;
 
     @Before
     public void init(){
         map = new HashMap<>();
         map.put("PNO","1234");
-        map.put("PNUM","1234-");
+        map.put("PNUM","12340");
     }
 
     @SuppressWarnings("Duplicates")
@@ -36,10 +36,10 @@ public class T212MapNValidatorTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        T212Map t212Map = T212Map.create(map);
+        T212Map t212Map = T212Map.createDataLevel(map);
 
         Set<ConstraintViolation<T212Map>> e1 = validator.validate(t212Map,
-                Default.class);
+                Default.class, ModeGroup.UseSubPacket.class);
         assertEquals(e1.size(),1);
     }
 }

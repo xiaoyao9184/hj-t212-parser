@@ -39,21 +39,25 @@ public class NValidator implements ConstraintValidator<N, String> {
         }
 //        return isValidFormat(format, value);
 
-        BigDecimal decimal = new BigDecimal(value);
-        int int_len = getNumLength(decimal.longValue());
-        int fraction_len = decimal.scale();
-        boolean result = int_len <= int_len_max &&
-                fraction_len <= fraction_len_max;
+        try{
+            BigDecimal decimal = new BigDecimal(value);
+            int int_len = getNumLength(decimal.longValue());
+            int fraction_len = decimal.scale();
+            boolean result = int_len <= int_len_max &&
+                    fraction_len <= fraction_len_max;
 
-        if(min > 0 &&
-                decimal.doubleValue() < min){
+            if(min > 0 &&
+                    decimal.doubleValue() < min){
+                return false;
+            }
+            if(max > 0 &&
+                    decimal.doubleValue() > max){
+                return false;
+            }
+            return result;
+        }catch (NumberFormatException e){
             return false;
         }
-        if(max > 0 &&
-                decimal.doubleValue() > max){
-            return false;
-        }
-        return result;
     }
 
     @Deprecated
