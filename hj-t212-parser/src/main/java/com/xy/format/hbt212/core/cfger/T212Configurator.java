@@ -157,9 +157,8 @@ public class T212Configurator
     public void configure(DataLevelMapDeserializer deserializer){
         deserializer.setVerifyFeature(verifyFeature);
         deserializer.setValidator(validator);
-        deserializer.setParserConfigurator(this::configure);
         deserializer.setSegmentParserConfigurator(this::configure);
-        deserializer.setDataDeserializer(new StringMapSegmentDeserializer());
+        deserializer.setSegmentDeserializer(new StringMapSegmentDeserializer());
     }
 
     /**
@@ -170,9 +169,8 @@ public class T212Configurator
     public void configure(CpDataLevelMapDeserializer deserializer){
         deserializer.setVerifyFeature(verifyFeature);
         deserializer.setValidator(validator);
-        deserializer.setParserConfigurator(this::configure);
         deserializer.setSegmentParserConfigurator(this::configure);
-        deserializer.setDataDeserializer(new MapSegmentDeserializer());
+        deserializer.setSegmentDeserializer(new MapSegmentDeserializer());
     }
 
     /**
@@ -182,9 +180,10 @@ public class T212Configurator
      */
     public void configure(DataDeserializer deserializer){
         deserializer.setVerifyFeature(verifyFeature);
+        deserializer.setValidator(validator);
         deserializer.setSegmentParserConfigurator(this::configure);
-        deserializer.setDataConverterConfigurator(this::configure);
         deserializer.setSegmentDeserializer(new MapSegmentDeserializer());
+        deserializer.setDataConverterConfigurator(this::configure);
     }
 
     /**

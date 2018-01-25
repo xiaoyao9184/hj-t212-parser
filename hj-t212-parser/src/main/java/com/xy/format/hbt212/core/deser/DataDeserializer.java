@@ -6,6 +6,7 @@ import com.xy.format.hbt212.core.VerifyUtil;
 import com.xy.format.hbt212.exception.T212FormatException;
 import com.xy.format.hbt212.model.Data;
 import com.xy.format.hbt212.model.DataFlag;
+import com.xy.format.hbt212.model.verify.DataElement;
 import com.xy.format.hbt212.model.verify.PacketElement;
 import com.xy.format.hbt212.model.verify.T212Map;
 import com.xy.format.hbt212.model.verify.groups.ModeGroup;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static com.xy.format.hbt212.core.T212Parser.crc16Checkout;
 import static com.xy.format.hbt212.core.feature.VerifyFeature.*;
+import static com.xy.format.hbt212.core.validator.clazz.FieldValidator.create_format_exception;
 
 /**
  * 对象 级别 反序列化器
@@ -39,8 +41,9 @@ public class DataDeserializer
 
     private int verifyFeature;
     private Configurator<SegmentParser> segmentParserConfigurator;
-    private Configurator<DataConverter> dataConverterConfigurator;
     private SegmentDeserializer<Map<String,Object>> segmentDeserializer;
+    private Configurator<DataConverter> dataConverterConfigurator;
+    private Validator validator;
 
 //    private int version;
 
@@ -91,35 +94,33 @@ public class DataDeserializer
     public Data deserialize(Map<String,Object> map) throws T212FormatException {
         DataConverter dataConverter = new DataConverter();
         dataConverter.configured(dataConverterConfigurator);
-        Data result = dataConverter.convert(T212Map.create(map));
+        Data result = dataConverter.convert(T212Map.createCpDataLevel(map));
 
-        verify(result);
+        if(USE_VERIFICATION.enabledIn(verifyFeature)){
+            verify(result);
+        }
         return result;
     }
 
     private void verify(Data result) throws T212FormatException {
-        Class versionGroup = DataFlag.V0.isMarked(result.getDataFlag()) ?
-                VersionGroup.V2017.class : VersionGroup.V2005.class;
+        List<Class> groups = new ArrayList<>();
+        groups.add(Default.class);
+        if(DataFlag.V0.isMarked(result.getDataFlag())){
+            groups.add(VersionGroup.V2017.class);
+        }else{
+            groups.add(VersionGroup.V2005.class);
+        }
+        if(DataFlag.D.isMarked(result.getDataFlag())){
+            groups.add(ModeGroup.UseSubPacket.class);
+        }
 
-        Class subPacket =  DataFlag.D.isMarked(result.getDataFlag()) ?
-                ModeGroup.UseSubPacket.class : Default.class;
-
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        if(!ALLOW_VALUE_NOT_IN_RANGE.enabledIn(verifyFeature)){
-            Set<ConstraintViolation<Data>> constraintViolationSet =
-                    validator.validate(result,Default.class,versionGroup,subPacket);
-            if(!constraintViolationSet.isEmpty()){
-                String msg = constraintViolationSet.stream()
-                        .map(cv -> {
-                            return "Data"
-                                    + ":"
-                                    + cv.getInvalidValue().toString()
-                                    + "_"
-                                    + cv.getMessage();
-                        })
-                        .collect(Collectors.joining("\n"));
-                throw new T212FormatException("Validate error\n\n" + msg);
+        Set<ConstraintViolation<Data>> constraintViolationSet =
+                validator.validate(result,groups.toArray(new Class[]{}));
+        if(!constraintViolationSet.isEmpty()) {
+            if(THROW_ERROR_VERIFICATION_FAILED.enabledIn(verifyFeature)){
+                create_format_exception(constraintViolationSet,result);
+            }else{
+                //TODO set context
             }
         }
     }
@@ -132,12 +133,16 @@ public class DataDeserializer
         this.segmentParserConfigurator = segmentParserConfigurator;
     }
 
+    public void setSegmentDeserializer(SegmentDeserializer<Map<String, Object>> segmentDeserializer) {
+        this.segmentDeserializer = segmentDeserializer;
+    }
+
     public void setDataConverterConfigurator(Configurator<DataConverter> mapperConfigurator) {
         this.dataConverterConfigurator = mapperConfigurator;
     }
 
-    public void setSegmentDeserializer(SegmentDeserializer<Map<String, Object>> segmentDeserializer) {
-        this.segmentDeserializer = segmentDeserializer;
+    public void setValidator(Validator validator) {
+        this.validator = validator;
     }
 
 }

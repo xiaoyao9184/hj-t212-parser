@@ -37,10 +37,9 @@ import static com.xy.format.hbt212.core.validator.clazz.FieldValidator.create_fo
 public class CpDataLevelMapDeserializer
         implements T212Deserializer<Map<String,Object>>, Configured<CpDataLevelMapDeserializer> {
 
-    private Configurator<T212Parser> parserConfigurator;
-    private Configurator<SegmentParser> segmentParserConfigurator;
     private int verifyFeature;
-    private SegmentDeserializer<Map<String,Object>> dataDeserializer;
+    private Configurator<SegmentParser> segmentParserConfigurator;
+    private SegmentDeserializer<Map<String,Object>> segmentDeserializer;
     private Validator validator;
 
     @Override
@@ -51,8 +50,6 @@ public class CpDataLevelMapDeserializer
     @SuppressWarnings("Duplicates")
     @Override
     public Map<String, Object> deserialize(T212Parser parser) throws IOException, T212FormatException {
-        parser.configured(parserConfigurator);
-
         parser.readHeader();
         int len = parser.readInt32(10);
         if(len == -1){
@@ -72,33 +69,34 @@ public class CpDataLevelMapDeserializer
         }
         parser.readFooter();
 
-        PushbackReader reader = new PushbackReader(new CharArrayReader(data));
-        SegmentParser segmentParser = new SegmentParser(reader);
-        return deserialize(segmentParser);
+        return deserialize(data);
     }
 
-    public Map<String, Object> deserialize(SegmentParser parser) throws IOException, T212FormatException {
+    public Map<String, Object> deserialize(char[] data) throws IOException, T212FormatException {
+        PushbackReader reader = new PushbackReader(new CharArrayReader(data));
+        SegmentParser parser = new SegmentParser(reader);
         parser.configured(segmentParserConfigurator);
 
         Map<String,Object> result = null;
         try {
-            result = dataDeserializer.deserialize(parser);
+            result = segmentDeserializer.deserialize(parser);
         } catch (SegmentFormatException e) {
             T212FormatException.segment_exception(e);
         }
 
-        verifyByType(result);
+        if(USE_VERIFICATION.enabledIn(verifyFeature)){
+            verifyByType(result);
+        }
         return result;
     }
 
     private void verifyByType(Map<String, Object> result) throws T212FormatException {
-        List<Class> groups = new ArrayList<>();
-        groups.add(Default.class);
         T212CpDataLevelMap t212Map = T212Map.createCpDataLevel(result);
         T212CpDataLevelMap.Cp cp = t212Map.getCp();
 
+        List<Class> groups = new ArrayList<>();
+        groups.add(Default.class);
         int flag = 0;
-
         if(result.containsKey(DataElement.Flag.name())){
             String f = (String) result.get(DataElement.Flag.name());
             flag = Integer.valueOf(f);
@@ -115,9 +113,12 @@ public class CpDataLevelMapDeserializer
         Set<ConstraintViolation<T212Map>> constraintViolationSet = validator.validate(t212Map,groups.toArray(new Class[]{}));
         Set<ConstraintViolation<T212Map>> constraintViolationSet2 = validator.validate(cp,groups.toArray(new Class[]{}));
         constraintViolationSet.addAll(constraintViolationSet2);
-
         if(!constraintViolationSet.isEmpty()) {
-            create_format_exception(constraintViolationSet,result);
+            if(THROW_ERROR_VERIFICATION_FAILED.enabledIn(verifyFeature)){
+                create_format_exception(constraintViolationSet,result);
+            }else{
+                //TODO set context
+            }
         }
     }
 
@@ -236,19 +237,16 @@ public class CpDataLevelMapDeserializer
         this.verifyFeature = verifyFeature;
     }
 
-    public void setParserConfigurator(Configurator<T212Parser> parserConfigurator) {
-        this.parserConfigurator = parserConfigurator;
-    }
-
     public void setSegmentParserConfigurator(Configurator<SegmentParser> segmentParserConfigurator) {
         this.segmentParserConfigurator = segmentParserConfigurator;
     }
 
-    public void setDataDeserializer(SegmentDeserializer<Map<String, Object>> dataDeserializer) {
-        this.dataDeserializer = dataDeserializer;
+    public void setSegmentDeserializer(SegmentDeserializer<Map<String, Object>> segmentDeserializer) {
+        this.segmentDeserializer = segmentDeserializer;
     }
 
     public void setValidator(Validator validator) {
         this.validator = validator;
     }
+
 }
