@@ -20,7 +20,6 @@ public class Data {
 
     @ApiModelProperty(value = "请求编号", name = "QN")
     @ValidDate(format = "yyyyMMddHHmmssSSS")
-    @ValidDate(format = "yyyyMMddHHmmssSSS", optional = false, groups = ModeGroup.Strict.class)
     @JsonProperty("QN")
     @JsonbProperty("QN")
     private String qn;
@@ -41,21 +40,18 @@ public class Data {
 
     @ApiModelProperty(value = "系统编号", name = "ST")
     @C(len = 2)
-    @NotBlank(groups = ModeGroup.Strict.class)
     @JsonProperty("ST")
     @JsonbProperty("ST")
     private String st;
 
     @ApiModelProperty(value = "命令编号", name = "CN")
     @C(len = 4)
-    @NotBlank(groups = ModeGroup.Strict.class)
     @JsonProperty("CN")
     @JsonbProperty("CN")
     private String cn;
 
     @ApiModelProperty(value = "访问密码", name = "PW")
     @C(len = 6)
-    @NotBlank(groups = ModeGroup.Strict.class)
     @JsonProperty("PW")
     @JsonbProperty("PW")
     private String pw;
@@ -63,7 +59,6 @@ public class Data {
     @ApiModelProperty(value = "设备唯一标识", name = "MN")
     @C(len = 14, groups = VersionGroup.V2005.class)
     @C(len = 24, groups = VersionGroup.V2017.class)
-    @NotBlank(groups = ModeGroup.Strict.class)
     @JsonProperty("MN")
     @JsonbProperty("MN")
     private String mn;
@@ -75,8 +70,8 @@ public class Data {
 
     @ApiModelProperty(value = "指令参数", name = "CP")
     @Valid
-    @JsonProperty("CP")
-    @JsonbProperty("CP")
+//    @JsonProperty("CP")
+//    @JsonbProperty("CP")
     private CpData cp;
 
     public String getQn() {

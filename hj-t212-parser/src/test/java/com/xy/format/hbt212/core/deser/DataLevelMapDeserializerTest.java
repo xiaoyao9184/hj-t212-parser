@@ -58,9 +58,10 @@ public class DataLevelMapDeserializerTest {
         String data = "##0139ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
 
         //CP length cant bigger than 960 in version 2005
-        String a = String.join("", Collections.nCopies(960,"#"));
+        int l = 1024 - 139;
+        String a = String.join("", Collections.nCopies(l,"#"));
         data = data.replace("060-Flag=N&&4980","060-Flag=N" + a + "&&4980");
-        data = data.replace("0139ST=32;","1098ST=32");
+        data = data.replace("0139ST=32;","1024ST=32;");
 
         T212Configurator configurator = new T212Configurator();
         configurator.setValidator(Validation.buildDefaultValidatorFactory().getValidator());
@@ -72,9 +73,10 @@ public class DataLevelMapDeserializerTest {
         DataLevelMapDeserializer deserializer = new DataLevelMapDeserializer();
         deserializer.configured(configurator);
         try (T212Parser p = parser) {
-            deserializer.deserialize(p);
+            String cp = deserializer.deserialize(p).get("CP");
+            assertTrue(cp.length() > 960);
         } catch (T212FormatException | IOException e) {
-            assertTrue(e.getMessage().contains("Validate"));
+            assert false;
         }
 
         vFeature = vFeature | USE_VERIFICATION.getMask();
@@ -85,11 +87,10 @@ public class DataLevelMapDeserializerTest {
         deserializer = new DataLevelMapDeserializer();
         deserializer.configured(configurator);
         try (T212Parser p = parser) {
-            Map<String, String> map = deserializer.deserialize(p);
-            assertNotNull(map);
-        } catch (T212FormatException | IOException e) {
-            e.printStackTrace();
+            deserializer.deserialize(p);
             assert false;
+        } catch (T212FormatException | IOException e) {
+            assertTrue(e.getMessage().contains("Validate"));
         }
     }
 

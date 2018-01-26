@@ -10,7 +10,6 @@ import com.xy.format.hbt212.model.verify.groups.VersionGroup;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +19,7 @@ import java.util.Map;
  */
 public class CpData {
 
-    @ValidDate(format = "yyyyMMddHHmmssSSS")
-    @ValidDate(format = "yyyyMMddHHmmssSSS", optional = false, groups = ModeGroup.Strict.class)
-//    @Pattern(regexp = "\\d{14}")
+    @ValidDate(format = "yyyyMMddHHmmss")
     @JsonProperty("SystemTime")
     @JsonbProperty("SystemTime")
     private String systemTime;
@@ -33,107 +30,81 @@ public class CpData {
     private String qn;
 
     @N(integer = 3)
-//    @Pattern(regexp = "\\d{3}")
     @JsonProperty("QnRtn")
     @JsonbProperty("QnRtn")
     private String qnRtn;
 
     @N(integer = 3)
-//    @Pattern(regexp = "\\d{3}")
     @JsonProperty("ExeRtn")
     @JsonbProperty("ExeRtn")
     private String exeRtn;
 
+    @Max(value = 9999, groups = VersionGroup.V2005.class)
     @Min(value = 30, groups = VersionGroup.V2017.class)
     @Max(value = 3600, groups = VersionGroup.V2017.class)
-//    @N(integer = 4, groups = VersionGroup.V2017.class)
-//    @Pattern(regexp = "\\d{4}")
     @JsonProperty("RtdInterval")
     @JsonbProperty("RtdInterval")
     private int rtdInterval;
 
     @Max(value = 99, groups = VersionGroup.V2017.class)
-//    @Min(value = 30, groups = VersionGroup.V2017.class)
-//    @Max(value = 3600, groups = VersionGroup.V2017.class)
-//    @N(integer = 2, groups = VersionGroup.V2017.class)
-//    @Pattern(regexp = "\\d{4}")
     @JsonProperty("MinInterval")
     @JsonbProperty("MinInterval")
     private int minInterval;
 
-//    @Pattern(regexp = "\\d{14}")
-    @ValidDate(format = "yyyyMMddHHmmssSSS", groups = VersionGroup.V2017.class)
+    @ValidDate(format = "yyyyMMddHHmmss", groups = VersionGroup.V2017.class)
     @JsonProperty("RestartTime")
     @JsonbProperty("RestartTime")
     private String restartTime;
-
-    @JsonProperty("Pollution")
-    @JsonbProperty("Pollution")
-    private Map<String,Pollution> pollution;
 
     @ValidDate(format = "yyyyMMddHHmmss", groups = VersionGroup.V2005.class)
     @JsonbProperty("AlarmTime")
     @JsonProperty("AlarmTime")
     private String alarmTime;
 
-//    @N(integer = 1, groups = VersionGroup.V2005.class)
-    @Pattern(regexp = "[01]", groups = VersionGroup.V2005.class)
+    @N(integer = 1, min = 0, max = 1, groups = VersionGroup.V2005.class)
     @JsonbProperty("AlarmType")
     @JsonProperty("AlarmType")
     private String alarmType;
 
     @N(integer = 20, groups = VersionGroup.V2005.class)
-//    @Pattern(regexp = "\\d{20}", groups = VersionGroup.V2005.class)
     @JsonbProperty("ReportTarget")
     @JsonProperty("ReportTarget")
     private String reportTarget;
 
     @C(len = 6)
-//    @Pattern(regexp = "\\w{3}")
     @JsonbProperty("PolId")
     @JsonProperty("PolId")
     private String polId;
 
-    @ValidDate(format = "yyyyMMddHHmmssSSS")
-//    @Pattern(regexp = "\\d{14}")
+    @ValidDate(format = "yyyyMMddHHmmss")
     @JsonProperty("BeginTime")
     @JsonbProperty("BeginTime")
     private String beginTime;
 
-    @ValidDate(format = "yyyyMMddHHmmssSSS")
-//    @Pattern(regexp = "\\d{14}")
+    @ValidDate(format = "yyyyMMddHHmmss")
     @JsonProperty("EndTime")
     @JsonbProperty("EndTime")
     private String endTime;
 
-    @ValidDate(format = "yyyyMMddHHmmssSSS")
-//    @Pattern(regexp = "\\d{14}")
+    @ValidDate(format = "yyyyMMddHHmmss")
     @JsonProperty("DataTime")
     @JsonbProperty("DataTime")
     private String dataTime;
 
     @N(integer = 4, groups = VersionGroup.V2005.class)
-//    @Pattern(regexp = "\\d{4}")
     @JsonProperty("ReportTime")
     @JsonbProperty("ReportTime")
     private String reportTime;
 
     @N(integer = 14, groups = VersionGroup.V2005.class)
-//    @Pattern(regexp = "\\d{14}")
     @JsonProperty("DayStdValue")
     @JsonbProperty("DayStdValue")
     private String dayStdValue;
 
     @N(integer = 14, groups = VersionGroup.V2005.class)
-//    @Pattern(regexp = "\\d{14}")
     @JsonProperty("NightStdValue")
     @JsonbProperty("NightStdValue")
     private String nightStdValue;
-
-
-//    @JsonProperty("Flag")
-//    @JsonbProperty("Flag")
-    private List<DataFlag> dataFlag;
 
     @Max(value = 9999, groups = VersionGroup.V2005.class)
     @JsonProperty("PNO")
@@ -172,11 +143,13 @@ public class CpData {
     private int warnTime;
 
     @Max(value = 99, groups = VersionGroup.V2005.class)
+    @Min(value = 0, groups = VersionGroup.V2017.class)
     @Max(value = 24, groups = VersionGroup.V2017.class)
     @JsonProperty("CTime")
     @JsonbProperty("CTime")
     private int cTime;
 
+    @Min(value = 0, groups = VersionGroup.V2017.class)
     @Max(value = 99, groups = VersionGroup.V2017.class)
     @JsonProperty("VaseNo")
     @JsonbProperty("VaseNo")
@@ -187,6 +160,7 @@ public class CpData {
     @JsonbProperty("CstartTime")
     private String cStartTime;
 
+    @Min(value = 0, groups = VersionGroup.V2017.class)
     @Max(value = 120, groups = VersionGroup.V2017.class)
     @JsonProperty("Stime")
     @JsonbProperty("Stime")
@@ -197,13 +171,12 @@ public class CpData {
     @JsonbProperty("InfoId")
     private String infoId;
 
+    private List<DataFlag> dataFlag;
 
-    @JsonProperty("Device")
-    @JsonbProperty("Device")
+    private Map<String,Pollution> pollution;
+
     private Map<String,Device> device;
 
-    @JsonProperty("LiveSide")
-    @JsonbProperty("LiveSide")
     private Map<String,LiveSide> liveSide;
 
 

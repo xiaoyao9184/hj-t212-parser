@@ -11,6 +11,7 @@ import java.util.List;
  * @see com.xy.format.hbt212.model.Data 时剔除的字段
  * Created by xiaoyao9184 on 2017/12/19.
  */
+@Deprecated
 public abstract class DataMixin {
 
     @JsonIgnore

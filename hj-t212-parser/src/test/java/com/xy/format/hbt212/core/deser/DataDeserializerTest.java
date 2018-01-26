@@ -12,6 +12,7 @@ import com.xy.format.segment.base.cfger.Feature;
 import com.xy.format.segment.core.feature.SegmentParserFeature;
 import org.junit.Test;
 
+import javax.validation.Validation;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
@@ -35,6 +36,7 @@ public class DataDeserializerTest {
         configurator.setVerifyFeature(Feature.collectFeatureDefaults(VerifyFeature.class));
         configurator.setParserFeature(Feature.collectFeatureDefaults(ParserFeature.class));
         configurator.setSegmentParserFeature(Feature.collectFeatureDefaults(SegmentParserFeature.class));
+        configurator.setValidator(Validation.buildDefaultValidatorFactory().getValidator());
 
         parser.configured(configurator);
         deserializer.configured(configurator);

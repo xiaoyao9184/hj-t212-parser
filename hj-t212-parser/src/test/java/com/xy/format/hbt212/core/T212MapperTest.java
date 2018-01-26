@@ -21,8 +21,7 @@ public class T212MapperTest {
         String h212 = "##0139ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
         T212Mapper mapper = new T212Mapper()
                 .enableDefaultParserFeatures()
-                .enableDefaultVerifyFeatures()
-                .disable(VerifyFeature.USE_VERIFICATION);
+                .enableDefaultVerifyFeatures();
         try {
             Map<String,String> data = mapper.readMap(h212);
 
@@ -39,11 +38,12 @@ public class T212MapperTest {
 
     @Test
     public void readDeepMap() {
-        String h212 = "##0139ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
+        String h212 = "##0136ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=" +
+                "&&DataTime=20160824003817;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&" +
+                "4980\r\n";
         T212Mapper mapper = new T212Mapper()
                 .enableDefaultParserFeatures()
-                .enableDefaultVerifyFeatures()
-                .disable(VerifyFeature.USE_VERIFICATION);
+                .enableDefaultVerifyFeatures();
         try {
             Map<String,Object> data = mapper.readDeepMap(h212);
 
@@ -53,7 +53,7 @@ public class T212MapperTest {
             assertEquals(data.get("MN"),"LD130133000015");
 
             Map<String,String> cp = (Map<String, String>) data.get("CP");
-            assertEquals(cp.get("DataTime"),"20160824003817000");
+            assertEquals(cp.get("DataTime"),"20160824003817");
             assertEquals(cp.get("B01-Rtd"),"36.91");
             assertEquals(cp.get("011-Rtd"),"231.0");
             assertEquals(cp.get("011-Flag"),"N");
@@ -67,13 +67,12 @@ public class T212MapperTest {
 
     @Test
     public void readData() {
-        String h212 = "##0139ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
+        String h212 = "##0136ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=" +
+                "&&DataTime=20160824003817;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&" +
+                "4980\r\n";
         T212Mapper mapper = new T212Mapper()
                 .enableDefaultParserFeatures()
-                .enableDefaultVerifyFeatures()
-                .disable(VerifyFeature.USE_VERIFICATION);
-//        mapper.objectMapper()
-//                .configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
+                .enableDefaultVerifyFeatures();
         try {
             Data data = mapper.readData(h212);
 
@@ -83,7 +82,7 @@ public class T212MapperTest {
             assertEquals(data.getMn(),"LD130133000015");
 
             CpData cp = data.getCp();
-            assertEquals(cp.getDataTime(),"20160824003817000");
+            assertEquals(cp.getDataTime(),"20160824003817");
             Map<String,Pollution> pollutionMap = cp.getPollution();
 
             Pollution pB01 = pollutionMap.get("B01");

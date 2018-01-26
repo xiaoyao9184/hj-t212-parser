@@ -139,13 +139,13 @@ public class T212CpDataLevelMap
             value = @ValidDate(format = "yyyyMMddHHmmss"))
     @FieldValidDate(field = "DataTime",
             value = @ValidDate(format = "yyyyMMddHHmmss"))
-    @FieldN(field = "OverTime", groups = VersionGroup.V2017.class,
-            value = @N(integer = 5))
     @FieldN(field = "OverTime", groups = VersionGroup.V2005.class,
+            value = @N(integer = 5))
+    @FieldN(field = "OverTime", groups = VersionGroup.V2017.class,
             value = @N(integer = 2))
     @FieldN(field = "ReCount",
             value = @N(integer = 2))
-    @FieldN(field = "Ctime", groups = VersionGroup.V2005.class,
+    @FieldN(field = "CTime", groups = VersionGroup.V2005.class,
             value = @N(integer = 2))
     @FieldN(field = "Ctime", groups = VersionGroup.V2017.class,
             value = @N(integer = 2, max = 24))

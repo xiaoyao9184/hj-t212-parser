@@ -5,8 +5,10 @@ import com.xy.format.hbt212.core.converter.DataConverter;
 import com.xy.format.hbt212.core.deser.CpDataLevelMapDeserializer;
 import com.xy.format.hbt212.core.deser.DataDeserializer;
 import com.xy.format.hbt212.core.deser.DataLevelMapDeserializer;
+import com.xy.format.hbt212.model.CpData;
 import com.xy.format.hbt212.model.Data;
-import com.xy.format.hbt212.model.mixin.DataMixin;
+import com.xy.format.hbt212.model.mixin.CpDataDeserializationMixin;
+import com.xy.format.hbt212.model.mixin.DataDeserializationMixin;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.MultipleConfiguratorAdapter;
 import com.xy.format.hbt212.core.T212Parser;
@@ -196,7 +198,8 @@ public class T212Configurator
         if(objectMapper == null){
             objectMapper = new ObjectMapper()
                     .configure(FAIL_ON_UNKNOWN_PROPERTIES,false)
-                    .addMixIn(Data.class, DataMixin.class);
+                    .addMixIn(Data.class, DataDeserializationMixin.class)
+                    .addMixIn(CpData.class, CpDataDeserializationMixin.class);
         }
         dataConverter.setObjectMapper(objectMapper);
     }
