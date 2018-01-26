@@ -2,6 +2,7 @@ package com.xy.format.hbt212.model.mixin;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xy.format.hbt212.model.*;
 
@@ -14,6 +15,7 @@ import java.util.Map;
  * @see Data 时使用
  * Created by xiaoyao9184 on 2017/12/19.
  */
+@JsonIgnoreProperties(value={ "Flag","Pollution","Device","LiveSide" }, allowGetters=true)
 public abstract class CpDataDeserializationMixin {
 
     @JsonProperty("SystemTime")

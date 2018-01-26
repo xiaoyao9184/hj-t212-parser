@@ -18,6 +18,10 @@ import java.util.List;
  */
 public class Data {
 
+    public static String CP = "CP";
+    public static String FLAG = "Flag";
+
+
     @ApiModelProperty(value = "请求编号", name = "QN")
     @ValidDate(format = "yyyyMMddHHmmssSSS")
     @JsonProperty("QN")
@@ -64,14 +68,14 @@ public class Data {
     private String mn;
 
     @ApiModelProperty(value = "是否拆分包及应答标志", name = "Flag")
-//    @JsonProperty("Flag")
-//    @JsonbProperty("Flag")
+    @JsonProperty("Flag")
+    @JsonbProperty("Flag")
     private List<DataFlag> dataFlag;
 
     @ApiModelProperty(value = "指令参数", name = "CP")
     @Valid
-//    @JsonProperty("CP")
-//    @JsonbProperty("CP")
+    @JsonProperty("CP")
+    @JsonbProperty("CP")
     private CpData cp;
 
     public String getQn() {

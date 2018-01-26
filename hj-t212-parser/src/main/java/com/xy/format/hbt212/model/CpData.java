@@ -1,5 +1,6 @@
 package com.xy.format.hbt212.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xy.format.hbt212.core.validator.field.C;
 import com.xy.format.hbt212.core.validator.field.N;
@@ -18,6 +19,10 @@ import java.util.Map;
  * Created by xiaoyao9184 on 2017/12/15.
  */
 public class CpData {
+
+    public static String LIVESIDE = "LiveSide";
+    public static String DEVICE = "Device";
+    public static String POLLUTION = "Pollution";
 
     @ValidDate(format = "yyyyMMddHHmmss")
     @JsonProperty("SystemTime")
@@ -147,6 +152,7 @@ public class CpData {
     @Max(value = 24, groups = VersionGroup.V2017.class)
     @JsonProperty("CTime")
     @JsonbProperty("CTime")
+    @JsonAlias({ "Ctime", "cTime" })
     private int cTime;
 
     @Min(value = 0, groups = VersionGroup.V2017.class)
@@ -171,12 +177,20 @@ public class CpData {
     @JsonbProperty("InfoId")
     private String infoId;
 
+    @JsonProperty("Flag")
+    @JsonbProperty("Flag")
     private List<DataFlag> dataFlag;
 
+    @JsonProperty("Pollution")
+    @JsonbProperty("Pollution")
     private Map<String,Pollution> pollution;
 
+    @JsonProperty("Device")
+    @JsonbProperty("Device")
     private Map<String,Device> device;
 
+    @JsonProperty("LiveSide")
+    @JsonbProperty("LiveSide")
     private Map<String,LiveSide> liveSide;
 
 

@@ -43,10 +43,6 @@ public class DataConverter
         predicateDevice = Pattern.compile(REGEX_DEVICE).asPredicate();
         predicateLiveSide = Pattern.compile(REGEX_LIVE_SIDE).asPredicate();
         predicatePollution = Pattern.compile(REGEX_POLLUTION).asPredicate();
-
-//        objectMapper
-//                .configure(FAIL_ON_UNKNOWN_PROPERTIES,false)
-//                .addMixIn(Data.class, DataMixin.class);
     }
 
 
@@ -138,7 +134,7 @@ public class DataConverter
      * @param predicate 过滤逻辑
      * @return
      */
-    private Map<String,String> filter(Map<String,String> map, Predicate predicate){
+    private Map<String,String> filter(Map<String,String> map, Predicate<String> predicate){
         return map.entrySet()
                 .stream()
                 .filter(kv -> predicate.test(kv.getKey()))
@@ -151,30 +147,32 @@ public class DataConverter
      * @param map
      * @return
      */
-    private CpData convertDataLevel(Map<String,String> map){
+    private Map<String,Object> convertDataLevel(Map<String,String> map){
+        Map<String,Object> cp = new HashMap<>();
         //v2017
         Map<String,String> d = filter(map,predicateDevice);
         Map<String,Device> deviceMap = convertDevice(d);
         d.keySet().stream().peek(map::remove);
+        cp.put(CpData.DEVICE,deviceMap);
 
         Map<String,String> ls = filter(map,predicateLiveSide);
         Map<String,LiveSide> liveSideMap = convertLiveSide(ls);
         ls.keySet().stream().peek(map::remove);
+        cp.put(CpData.LIVESIDE,liveSideMap);
 
         //v2005
         String flag = (String) map.get(DataElement.Flag.name());
         List<DataFlag> dataFlags = convertDataFlag(flag);
+        map.remove(DataElement.Flag.name());
+        cp.put(Data.FLAG,dataFlags);
 
         Map<String,String> p = filter(map,predicatePollution);
         Map<String,Pollution> pollutionMap = convertPollution(p);
+        cp.put(CpData.POLLUTION,pollutionMap);
 
-        CpData cpData = objectMapper.convertValue(map,CpData.class);
-        cpData.setDataFlag(dataFlags);
-        cpData.setDevice(deviceMap);
-        cpData.setLiveSide(liveSideMap);
-        cpData.setPollution(pollutionMap);
+        cp.putAll(map);
 
-        return cpData;
+        return cp;
     }
 
     /**
@@ -198,17 +196,20 @@ public class DataConverter
      * @param map
      * @return
      */
+    @SuppressWarnings("unchecked")
     private Data convertDataLevel(T212Map<String,Object> map){
-        Data data = objectMapper
-                .convertValue(map,Data.class);
-
         String flag = (String) map.get(DataElement.Flag.name());
-        data.setDataFlag(convertDataFlag(flag));
+        map.remove(DataElement.Flag.name());
+        List<DataFlag> flagList = convertDataFlag(flag);
+        map.put(Data.FLAG,flagList);
 
         Map<String,String> cp = (Map<String, String>) map.get(DataElement.CP.name());
-        data.setCp(convertDataLevel(cp));
+        map.remove(DataElement.CP.name());
+        Map<String,Object> cpMap = convertDataLevel(cp);
+        map.put(Data.CP,cpMap);
 
-        return data;
+        return objectMapper
+                .convertValue(map,Data.class);
     }
 
     @Override

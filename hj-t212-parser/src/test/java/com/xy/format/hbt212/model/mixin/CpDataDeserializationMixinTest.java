@@ -1,5 +1,6 @@
 package com.xy.format.hbt212.model.mixin;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xy.format.hbt212.model.CpData;
 import org.junit.Test;
@@ -8,7 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by xiaoyao9184 on 2018/1/25.
@@ -16,11 +19,11 @@ import static org.junit.Assert.*;
 public class CpDataDeserializationMixinTest {
 
     @Test
-    public void testMixinWithAlias(){
+    public void testMixinWithAlias() throws JsonProcessingException {
         Map<String,String> map = new HashMap<>();
         map.put("cTime","1");
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.addMixIn(CpData.class,CpDataDeserializationMixin.class);
+//        objectMapper.addMixIn(CpData.class,CpDataDeserializationMixin.class);
 
         CpData cp = objectMapper.convertValue(map, CpData.class);
         assertEquals(cp.getcTime(),1);
@@ -38,6 +41,8 @@ public class CpDataDeserializationMixinTest {
         cp = objectMapper.convertValue(map, CpData.class);
         assertEquals(cp.getcTime(),1);
 
+        String json = objectMapper.writeValueAsString(cp);
+        assertTrue(json.contains("CTime"));
     }
 
     @Test

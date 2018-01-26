@@ -1,5 +1,6 @@
 package com.xy.format.hbt212.model.mixin;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xy.format.hbt212.model.CpData;
 import com.xy.format.hbt212.model.Data;
@@ -19,6 +20,7 @@ public class DataDeserializationMixinTest {
     @Test
     public void testIgnore(){
         Map<String,String> map = new HashMap<>();
+        map.put("ST","31");
         map.put("Flag","N");
         map.put("CP","&&k=v&&");
         ObjectMapper objectMapper = new ObjectMapper();

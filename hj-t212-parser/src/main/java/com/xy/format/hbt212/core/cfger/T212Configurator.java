@@ -1,18 +1,14 @@
 package com.xy.format.hbt212.core.cfger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xy.format.hbt212.core.T212Parser;
 import com.xy.format.hbt212.core.converter.DataConverter;
 import com.xy.format.hbt212.core.deser.CpDataLevelMapDeserializer;
 import com.xy.format.hbt212.core.deser.DataDeserializer;
 import com.xy.format.hbt212.core.deser.DataLevelMapDeserializer;
-import com.xy.format.hbt212.model.CpData;
-import com.xy.format.hbt212.model.Data;
-import com.xy.format.hbt212.model.mixin.CpDataDeserializationMixin;
-import com.xy.format.hbt212.model.mixin.DataDeserializationMixin;
+import com.xy.format.hbt212.core.deser.PackLevelDeserializer;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.MultipleConfiguratorAdapter;
-import com.xy.format.hbt212.core.T212Parser;
-import com.xy.format.hbt212.core.deser.PackLevelDeserializer;
 import com.xy.format.segment.core.SegmentParser;
 import com.xy.format.segment.core.deser.MapSegmentDeserializer;
 import com.xy.format.segment.core.deser.StringMapSegmentDeserializer;
@@ -197,9 +193,15 @@ public class T212Configurator
         ObjectMapper objectMapper = this.objectMapper;
         if(objectMapper == null){
             objectMapper = new ObjectMapper()
-                    .configure(FAIL_ON_UNKNOWN_PROPERTIES,false)
-                    .addMixIn(Data.class, DataDeserializationMixin.class)
-                    .addMixIn(CpData.class, CpDataDeserializationMixin.class);
+                    .configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
+//                    .addMixIn(Data.class, DataDeserializationMixin.class)
+//                    .addMixIn(CpData.class, CpDataDeserializationMixin.class);
+//            objectMapper.getSerializationConfig()
+//                    .getDefaultVisibilityChecker()
+//                    .withFieldVisibility(JsonAutoDetect.Visibility.NONE)
+//                    .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+//                    .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+//                    .withCreatorVisibility(JsonAutoDetect.Visibility.NONE);
         }
         dataConverter.setObjectMapper(objectMapper);
     }
