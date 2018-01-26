@@ -43,6 +43,7 @@ public enum VerifyFeature implements Feature {
     /**
      * 严格模式
      */
+    @Deprecated
     STRICT(false);
 
 

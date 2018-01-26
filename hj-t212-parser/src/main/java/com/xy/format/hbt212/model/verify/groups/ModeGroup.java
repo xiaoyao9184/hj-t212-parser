@@ -8,6 +8,7 @@ public interface ModeGroup {
     /**
      * 严格模式
      */
+    @Deprecated
     interface Strict{}
 
     /**
