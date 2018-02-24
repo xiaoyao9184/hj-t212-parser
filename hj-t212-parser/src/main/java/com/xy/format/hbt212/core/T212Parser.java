@@ -75,7 +75,7 @@ public class T212Parser
     }
 
     /**
-     * 读取4字节Integer
+     * 读取 4字节Integer
      * @param radix 进制
      * @return Integer
      * @throws IOException
