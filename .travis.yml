@@ -3,5 +3,5 @@ language: java
 sudo: required
 dist: trusty
 
-before_script:
+before_install:
   - chmod +x gradlew
