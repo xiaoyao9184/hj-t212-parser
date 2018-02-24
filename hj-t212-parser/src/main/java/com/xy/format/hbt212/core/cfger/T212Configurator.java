@@ -1,12 +1,14 @@
 package com.xy.format.hbt212.core.cfger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xy.format.hbt212.core.T212Generator;
 import com.xy.format.hbt212.core.T212Parser;
 import com.xy.format.hbt212.core.converter.DataConverter;
 import com.xy.format.hbt212.core.deser.CpDataLevelMapDeserializer;
 import com.xy.format.hbt212.core.deser.DataDeserializer;
 import com.xy.format.hbt212.core.deser.DataLevelMapDeserializer;
 import com.xy.format.hbt212.core.deser.PackLevelDeserializer;
+import com.xy.format.hbt212.core.ser.PackLevelSerializer;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.MultipleConfiguratorAdapter;
 import com.xy.format.segment.core.SegmentParser;
@@ -68,32 +70,46 @@ public class T212Configurator
     }
     class PackLevelDeserializerConfigurator implements Configurator<PackLevelDeserializer>{
         @Override
-        public void config(PackLevelDeserializer parser) {
-            T212Configurator.this.configure(parser);
+        public void config(PackLevelDeserializer deserializer) {
+            T212Configurator.this.configure(deserializer);
         }
     }
     class DataLevelMapDeserializerConfigurator implements Configurator<DataLevelMapDeserializer>{
         @Override
-        public void config(DataLevelMapDeserializer parser) {
-            T212Configurator.this.configure(parser);
+        public void config(DataLevelMapDeserializer deserializer) {
+            T212Configurator.this.configure(deserializer);
         }
     }
     class CpDataLevelMapDeserializerConfigurator implements Configurator<CpDataLevelMapDeserializer>{
         @Override
-        public void config(CpDataLevelMapDeserializer parser) {
-            T212Configurator.this.configure(parser);
+        public void config(CpDataLevelMapDeserializer deserializer) {
+            T212Configurator.this.configure(deserializer);
         }
     }
     class DataDeserializerConfigurator implements Configurator<DataDeserializer>{
         @Override
-        public void config(DataDeserializer parser) {
-            T212Configurator.this.configure(parser);
+        public void config(DataDeserializer deserializer) {
+            T212Configurator.this.configure(deserializer);
         }
     }
     class DataConverterConfigurator implements Configurator<DataConverter>{
         @Override
         public void config(DataConverter converter) {
             T212Configurator.this.configure(converter);
+        }
+    }
+
+    class T212GeneratorConfigurator implements Configurator<T212Generator>{
+        @Override
+        public void config(T212Generator generator) {
+            T212Configurator.this.configure(generator);
+        }
+    }
+
+    class PackLevelSerializerConfigurator implements Configurator<PackLevelSerializer>{
+        @Override
+        public void config(PackLevelSerializer serializer) {
+            T212Configurator.this.configure(serializer);
         }
     }
 
@@ -106,7 +122,9 @@ public class T212Configurator
                 new DataLevelMapDeserializerConfigurator(),
                 new CpDataLevelMapDeserializerConfigurator(),
                 new DataDeserializerConfigurator(),
-                new DataConverterConfigurator()
+                new DataConverterConfigurator(),
+                new T212GeneratorConfigurator(),
+                new PackLevelSerializerConfigurator()
 //                (Configurator<SegmentParser>)this::configure,
 //                (Configurator<T212Parser>)this::configure,
 //                (Configurator<PackLevelDeserializer>)this::configure,
@@ -204,6 +222,15 @@ public class T212Configurator
 //                    .withCreatorVisibility(JsonAutoDetect.Visibility.NONE);
         }
         dataConverter.setObjectMapper(objectMapper);
+    }
+
+    private void configure(T212Generator generator) {
+        generator.setGeneratorFeature(0);
+    }
+
+    private void configure(PackLevelSerializer serializer) {
+        serializer.setVerifyFeature(verifyFeature);
+        serializer.setGeneratorConfigurator(this::configure);
     }
 
 }

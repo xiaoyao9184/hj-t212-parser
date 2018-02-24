@@ -30,7 +30,7 @@ public class T212Generator
      * 设置生成特性
      * @param generatorFeature 生成特性
      */
-    public void setParserFeature(int generatorFeature) {
+    public void setGeneratorFeature(int generatorFeature) {
         this.generatorFeature = generatorFeature;
     }
 

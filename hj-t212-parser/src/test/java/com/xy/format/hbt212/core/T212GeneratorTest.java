@@ -18,7 +18,7 @@ public class T212GeneratorTest {
         String data = "ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&";
         StringWriter writer = new StringWriter();
         T212Generator generator = new T212Generator(writer);
-        generator.setParserFeature(Feature.collectFeatureDefaults(GeneratorFeature.class));
+        generator.setGeneratorFeature(Feature.collectFeatureDefaults(GeneratorFeature.class));
         try {
             assertEquals(generator.writeHeader(),2);
             assertEquals(generator.writeDataLen(new char[]{'0','1','3','9'}),4);
@@ -39,7 +39,7 @@ public class T212GeneratorTest {
         String data = "ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&";
         StringWriter writer = new StringWriter();
         T212Generator generator = new T212Generator(writer);
-        generator.setParserFeature(Feature.collectFeatureDefaults(GeneratorFeature.class));
+        generator.setGeneratorFeature(Feature.collectFeatureDefaults(GeneratorFeature.class));
         try {
             assertEquals(generator.writeHeader(),2);
             assertEquals(generator.writeDataAndLenAndCrc(data.toCharArray()),139 + 4+ 4);
