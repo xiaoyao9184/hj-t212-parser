@@ -5,15 +5,17 @@ import com.xy.format.hbt212.core.cfger.T212Configurator;
 import com.xy.format.hbt212.core.deser.*;
 import com.xy.format.hbt212.core.feature.ParserFeature;
 import com.xy.format.hbt212.core.feature.VerifyFeature;
+import com.xy.format.hbt212.core.ser.CpDataLevelMapDataSerializer;
+import com.xy.format.hbt212.core.ser.DataSerializer;
+import com.xy.format.hbt212.core.ser.PackLevelSerializer;
+import com.xy.format.hbt212.core.ser.T212Serializer;
 import com.xy.format.hbt212.exception.T212FormatException;
 import com.xy.format.hbt212.model.Data;
 import com.xy.format.segment.base.cfger.Feature;
 import com.xy.format.segment.core.feature.SegmentParserFeature;
 
 import javax.validation.Validator;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
@@ -35,10 +37,16 @@ public class T212Mapper {
             t212FactoryProtoType.deserializerRegister(CpDataLevelMapDeserializer.class);
             t212FactoryProtoType.deserializerRegister(DataLevelMapDeserializer.class);
             t212FactoryProtoType.deserializerRegister(PackLevelDeserializer.class);
-            //默认 反序列化器
             t212FactoryProtoType.deserializerRegister(Map.class, CpDataLevelMapDeserializer.class);
             t212FactoryProtoType.deserializerRegister(Data.class, DataDeserializer.class);
+            //默认 反序列化器
             t212FactoryProtoType.deserializerRegister(Object.class, CpDataLevelMapDeserializer.class);
+
+            //注册 序列化器
+            t212FactoryProtoType.serializerRegister(PackLevelSerializer.class);
+            t212FactoryProtoType.serializerRegister(Data.class, DataSerializer.class);
+            t212FactoryProtoType.serializerRegister(Map.class, CpDataLevelMapDataSerializer.class);
+            //没有默认 序列化器
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -180,6 +188,26 @@ public class T212Mapper {
             throw new T212FormatException("Runtime error",e);
         }
     }
+
+    public <T> void writeValueAsStream(T value, Class<T> type, OutputStream outputStream) throws IOException, T212FormatException {
+        applyConfigurator();
+        _writeValueAndClose(factory.generator(outputStream),value,type);
+    }
+
+    public <T> void writeValueAsWriter(T value, Class<T> type, Writer writer) throws IOException, T212FormatException {
+        applyConfigurator();
+        _writeValueAndClose(factory.generator(writer),value,type);
+    }
+
+    private <T> void _writeValueAndClose(T212Generator generator, T value, Class<T> type) throws IOException, T212FormatException {
+        T212Serializer<T> serializer = factory.serializerFor(type);
+        try(T212Generator g = generator){
+            serializer.serialize(g,value);
+        }catch (RuntimeException e){
+            throw new T212FormatException("Runtime error",e);
+        }
+    }
+
 
 
     private static Supplier<Type> getMapGenericType(){
@@ -378,6 +406,27 @@ public class T212Mapper {
     public Data readData(String data) throws IOException, T212FormatException {
         //noinspection unchecked
         return readValue(data,Data.class);
+    }
+
+
+    public String writeMapAsString(Map data) throws IOException, T212FormatException {
+        StringWriter sw = new StringWriter();
+        writeValueAsWriter(data,Map.class,sw);
+        return sw.toString();
+    }
+
+    public char[] writeMapAsCharArray(Map data) throws IOException, T212FormatException {
+        return writeMapAsString(data).toCharArray();
+    }
+
+    public String writeDataAsString(Data data) throws IOException, T212FormatException {
+        StringWriter sw = new StringWriter();
+        writeValueAsWriter(data,Data.class,sw);
+        return sw.toString();
+    }
+
+    public char[] writeDataAsCharArray(Data data) throws IOException, T212FormatException {
+        return writeDataAsString(data).toCharArray();
     }
 
 }

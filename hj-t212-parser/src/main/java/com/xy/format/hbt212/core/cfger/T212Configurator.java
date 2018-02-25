@@ -10,6 +10,7 @@ import com.xy.format.hbt212.core.deser.CpDataLevelMapDeserializer;
 import com.xy.format.hbt212.core.deser.DataDeserializer;
 import com.xy.format.hbt212.core.deser.DataLevelMapDeserializer;
 import com.xy.format.hbt212.core.deser.PackLevelDeserializer;
+import com.xy.format.hbt212.core.ser.CpDataLevelMapDataSerializer;
 import com.xy.format.hbt212.core.ser.DataSerializer;
 import com.xy.format.hbt212.core.ser.PackLevelSerializer;
 import com.xy.format.hbt212.core.ser.T212CpMapPathValueSegmentSerializer;
@@ -131,6 +132,12 @@ public class T212Configurator
             T212Configurator.this.configure(serializer);
         }
     }
+    class CpDataLevelMapDataSerializerConfigurator implements Configurator<CpDataLevelMapDataSerializer>{
+        @Override
+        public void config(CpDataLevelMapDataSerializer serializer) {
+            T212Configurator.this.configure(serializer);
+        }
+    }
     class DataSerializerConfigurator implements Configurator<DataSerializer>{
         @Override
         public void config(DataSerializer serializer) {
@@ -160,6 +167,7 @@ public class T212Configurator
                 new SegmentGeneratorConfigurator(),
                 new T212GeneratorConfigurator(),
                 new PackLevelSerializerConfigurator(),
+                new CpDataLevelMapDataSerializerConfigurator(),
                 new DataSerializerConfigurator(),
                 new DataReverseConverterConfigurator()
 //                (Configurator<SegmentParser>)this::configure,
@@ -292,6 +300,18 @@ public class T212Configurator
     private void configure(PackLevelSerializer serializer) {
         serializer.setVerifyFeature(verifyFeature);
         serializer.setGeneratorConfigurator(this::configure);
+    }
+
+    /**
+     * 泛型方法实现
+     * @see Configurator#config(Object)
+     * @param serializer
+     */
+    public void configure(CpDataLevelMapDataSerializer serializer){
+        serializer.setVerifyFeature(verifyFeature);
+        serializer.setValidator(validator);
+        serializer.setSegmentGeneratorConfigurator(this::configure);
+        serializer.setSegmentSerializer(new MapSegmentSerializer(new T212CpMapPathValueSegmentSerializer()));
     }
 
     /**

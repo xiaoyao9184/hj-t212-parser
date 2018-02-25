@@ -1,6 +1,5 @@
 package com.xy.format.hbt212.core.ser;
 
-import com.xy.format.hbt212.model.verify.T212CpDataLevelMap;
 import com.xy.format.segment.core.SegmentGenerator;
 import com.xy.format.segment.core.ser.SegmentSerializer;
 import com.xy.format.segment.exception.SegmentFormatException;
@@ -25,7 +24,7 @@ public class T212CpMapPathValueSegmentSerializer
             //NOT CP map but also support
             String value = (String) data;
             generator.writeValue(value);
-        }else if(data instanceof T212CpDataLevelMap){
+        }else if(data instanceof Map){
             //maybe T212Map
             Map<String,Object> map = (Map) data;
             SegmentGenerator g = generator.writeObjectStart();
