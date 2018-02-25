@@ -26,6 +26,9 @@ buildscript {
 allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
+    apply plugin: 'maven'
+
+    group = 'com.github.xiaoyao9184'
 
     repositories {
         mavenLocal()
