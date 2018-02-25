@@ -1,19 +1,25 @@
 package com.xy.format.hbt212.core.cfger;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xy.format.hbt212.core.T212Generator;
 import com.xy.format.hbt212.core.T212Parser;
 import com.xy.format.hbt212.core.converter.DataConverter;
+import com.xy.format.hbt212.core.converter.DataReverseConverter;
 import com.xy.format.hbt212.core.deser.CpDataLevelMapDeserializer;
 import com.xy.format.hbt212.core.deser.DataDeserializer;
 import com.xy.format.hbt212.core.deser.DataLevelMapDeserializer;
 import com.xy.format.hbt212.core.deser.PackLevelDeserializer;
+import com.xy.format.hbt212.core.ser.DataSerializer;
 import com.xy.format.hbt212.core.ser.PackLevelSerializer;
+import com.xy.format.hbt212.core.ser.T212CpMapPathValueSegmentSerializer;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.MultipleConfiguratorAdapter;
+import com.xy.format.segment.core.SegmentGenerator;
 import com.xy.format.segment.core.SegmentParser;
 import com.xy.format.segment.core.deser.MapSegmentDeserializer;
 import com.xy.format.segment.core.deser.StringMapSegmentDeserializer;
+import com.xy.format.segment.core.ser.MapSegmentSerializer;
 
 import javax.validation.Validator;
 import java.util.Collection;
@@ -31,9 +37,13 @@ public class T212Configurator
 
     private int segmentParserFeature;
     private int parserFeature;
+
     private int verifyFeature;
     private Validator validator;
     private ObjectMapper objectMapper;
+
+    private int segmentGeneratorFeature;
+    private final int generatorFeature = 0;
 
     public void setSegmentParserFeature(int segmentParserFeature) {
         this.segmentParserFeature = segmentParserFeature;
@@ -53,6 +63,10 @@ public class T212Configurator
 
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+    }
+
+    public void setSegmentGeneratorFeature(int segmentGeneratorFeature) {
+        this.segmentGeneratorFeature = segmentGeneratorFeature;
     }
 
 
@@ -99,19 +113,38 @@ public class T212Configurator
         }
     }
 
+    class SegmentGeneratorConfigurator implements Configurator<SegmentGenerator>{
+        @Override
+        public void config(SegmentGenerator generator) {
+            T212Configurator.this.configure(generator);
+        }
+    }
     class T212GeneratorConfigurator implements Configurator<T212Generator>{
         @Override
         public void config(T212Generator generator) {
             T212Configurator.this.configure(generator);
         }
     }
-
     class PackLevelSerializerConfigurator implements Configurator<PackLevelSerializer>{
         @Override
         public void config(PackLevelSerializer serializer) {
             T212Configurator.this.configure(serializer);
         }
     }
+    class DataSerializerConfigurator implements Configurator<DataSerializer>{
+        @Override
+        public void config(DataSerializer serializer) {
+            T212Configurator.this.configure(serializer);
+        }
+    }
+    class DataReverseConverterConfigurator implements Configurator<DataReverseConverter>{
+        @Override
+        public void config(DataReverseConverter converter) {
+            T212Configurator.this.configure(converter);
+        }
+    }
+
+
 
     @Override
     public Collection<Configurator> configurators() {
@@ -123,8 +156,12 @@ public class T212Configurator
                 new CpDataLevelMapDeserializerConfigurator(),
                 new DataDeserializerConfigurator(),
                 new DataConverterConfigurator(),
+
+                new SegmentGeneratorConfigurator(),
                 new T212GeneratorConfigurator(),
-                new PackLevelSerializerConfigurator()
+                new PackLevelSerializerConfigurator(),
+                new DataSerializerConfigurator(),
+                new DataReverseConverterConfigurator()
 //                (Configurator<SegmentParser>)this::configure,
 //                (Configurator<T212Parser>)this::configure,
 //                (Configurator<PackLevelDeserializer>)this::configure,
@@ -212,6 +249,7 @@ public class T212Configurator
         if(objectMapper == null){
             objectMapper = new ObjectMapper()
                     .configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 //                    .addMixIn(Data.class, DataDeserializationMixin.class)
 //                    .addMixIn(CpData.class, CpDataDeserializationMixin.class);
 //            objectMapper.getSerializationConfig()
@@ -224,13 +262,64 @@ public class T212Configurator
         dataConverter.setObjectMapper(objectMapper);
     }
 
-    private void configure(T212Generator generator) {
-        generator.setGeneratorFeature(0);
+
+    /**
+     * 泛型方法实现
+     * @see Configurator#config(Object)
+     * @param generator
+     */
+    private void configure(SegmentGenerator generator){
+        if(generator.nextToken() == null){
+            generator.initToken();
+        }
+        generator.setGeneratorFeature(segmentGeneratorFeature);
     }
 
+    /**
+     * 泛型方法实现
+     * @see Configurator#config(Object)
+     * @param generator
+     */
+    private void configure(T212Generator generator) {
+        generator.setGeneratorFeature(generatorFeature);
+    }
+
+    /**
+     * 泛型方法实现
+     * @see Configurator#config(Object)
+     * @param serializer
+     */
     private void configure(PackLevelSerializer serializer) {
         serializer.setVerifyFeature(verifyFeature);
         serializer.setGeneratorConfigurator(this::configure);
+    }
+
+    /**
+     * 泛型方法实现
+     * @see Configurator#config(Object)
+     * @param serializer
+     */
+    private void configure(DataSerializer serializer) {
+        serializer.setVerifyFeature(verifyFeature);
+        serializer.setValidator(validator);
+        serializer.setSegmentGeneratorConfigurator(this::configure);
+        serializer.setSegmentSerializer(new MapSegmentSerializer(new T212CpMapPathValueSegmentSerializer()));
+        serializer.setDataReverseConverterConfigurator(this::configure);
+    }
+
+    /**
+     * 泛型方法实现
+     * @see Configurator#config(Object)
+     * @param dataReverseConverter
+     */
+    private void configure(DataReverseConverter dataReverseConverter) {
+        ObjectMapper objectMapper = this.objectMapper;
+        if(objectMapper == null){
+            objectMapper = new ObjectMapper()
+                    .configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        }
+        dataReverseConverter.setObjectMapper(objectMapper);
     }
 
 }
