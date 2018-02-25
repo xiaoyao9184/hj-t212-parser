@@ -3,5 +3,6 @@
 /build
 /classes
 /**/out/
+/**/build/
 
 *.iml
