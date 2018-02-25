@@ -86,7 +86,7 @@ public class Pollution {
 //    @N(integer = 1, groups = VersionGroup.V2005.class)
     @JsonProperty("RS")
     @JsonbProperty("RS")
-    private int rs;
+    private Integer rs;
 
     @ApiModelProperty(value = "设备指定时间内的运行时间", name = "RT")
     @DecimalMax(value = "24", groups = VersionGroup.V2005.class)
@@ -231,11 +231,11 @@ public class Pollution {
         this.cou = cou;
     }
 
-    public int getRs() {
+    public Integer getRs() {
         return rs;
     }
 
-    public void setRs(int rs) {
+    public void setRs(Integer rs) {
         this.rs = rs;
     }
 

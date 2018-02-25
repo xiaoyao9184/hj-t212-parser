@@ -26,20 +26,20 @@ public class CpDataDeserializationMixinTest {
 //        objectMapper.addMixIn(CpData.class,CpDataDeserializationMixin.class);
 
         CpData cp = objectMapper.convertValue(map, CpData.class);
-        assertEquals(cp.getcTime(),1);
+        assertEquals(cp.getcTime().intValue(),1);
 
         map.clear();
         cp = null;
         map.put("Ctime","2");
         cp = objectMapper.convertValue(map, CpData.class);
-        assertEquals(cp.getcTime(),2);
+        assertEquals(cp.getcTime().intValue(),2);
 
         map.clear();
         cp = null;
         map.put("Ctime","2");
         map.put("cTime","1");
         cp = objectMapper.convertValue(map, CpData.class);
-        assertEquals(cp.getcTime(),1);
+        assertEquals(cp.getcTime().intValue(),1);
 
         String json = objectMapper.writeValueAsString(cp);
         assertTrue(json.contains("CTime"));

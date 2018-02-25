@@ -1,5 +1,6 @@
 package com.xy.format.hbt212.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xy.format.hbt212.core.validator.field.C;
 import com.xy.format.hbt212.core.validator.field.ValidDate;
@@ -33,14 +34,14 @@ public class Data {
     @Min(value = 1, groups = ModeGroup.UseSubPacket.class)
     @JsonProperty("PNUM")
     @JsonbProperty("PNUM")
-    private int pNum;
+    private Integer pNum;
 
     @ApiModelProperty(value = "包号", name = "PNO")
     @Max(value = 9999)
     @Min(value = 1, groups = ModeGroup.UseSubPacket.class)
     @JsonProperty("PNO")
     @JsonbProperty("PNO")
-    private int pNo;
+    private Integer pNo;
 
     @ApiModelProperty(value = "系统编号", name = "ST")
     @C(len = 2)
@@ -86,19 +87,19 @@ public class Data {
         this.qn = qn;
     }
 
-    public int getpNum() {
+    public Integer getpNum() {
         return pNum;
     }
 
-    public void setpNum(int pNum) {
+    public void setpNum(Integer pNum) {
         this.pNum = pNum;
     }
 
-    public int getpNo() {
+    public Integer getpNo() {
         return pNo;
     }
 
-    public void setpNo(int pNo) {
+    public void setpNo(Integer pNo) {
         this.pNo = pNo;
     }
 

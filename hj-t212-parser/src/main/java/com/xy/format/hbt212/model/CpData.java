@@ -1,6 +1,7 @@
 package com.xy.format.hbt212.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xy.format.hbt212.core.validator.field.C;
 import com.xy.format.hbt212.core.validator.field.N;
@@ -49,12 +50,12 @@ public class CpData {
     @Max(value = 3600, groups = VersionGroup.V2017.class)
     @JsonProperty("RtdInterval")
     @JsonbProperty("RtdInterval")
-    private int rtdInterval;
+    private Integer rtdInterval;
 
     @Max(value = 99, groups = VersionGroup.V2017.class)
     @JsonProperty("MinInterval")
     @JsonbProperty("MinInterval")
-    private int minInterval;
+    private Integer minInterval;
 
     @ValidDate(format = "yyyyMMddHHmmss", groups = VersionGroup.V2017.class)
     @JsonProperty("RestartTime")
@@ -114,12 +115,12 @@ public class CpData {
     @Max(value = 9999, groups = VersionGroup.V2005.class)
     @JsonProperty("PNO")
     @JsonbProperty("PNO")
-    private int pNo;
+    private Integer pNo;
 
     @Max(value = 9999, groups = VersionGroup.V2005.class)
     @JsonProperty("PNUM")
     @JsonbProperty("PNUM")
-    private int pNum;
+    private Integer pNum;
 
     @C(len = 6, groups = VersionGroup.V2005.class)
     @JsonProperty("PW")
@@ -135,17 +136,17 @@ public class CpData {
     @Max(value = 99, groups = VersionGroup.V2017.class)
     @JsonProperty("OverTime")
     @JsonbProperty("OverTime")
-    private int overTime;
+    private Integer overTime;
 
     @Max(value = 99)
     @JsonProperty("ReCount")
     @JsonbProperty("ReCount")
-    private int reCount;
+    private Integer reCount;
 
     @Max(value = 99999, groups = VersionGroup.V2005.class)
     @JsonProperty("WarnTime")
     @JsonbProperty("WarnTime")
-    private int warnTime;
+    private Integer warnTime;
 
     @Max(value = 99, groups = VersionGroup.V2005.class)
     @Min(value = 0, groups = VersionGroup.V2017.class)
@@ -153,13 +154,13 @@ public class CpData {
     @JsonProperty("CTime")
     @JsonbProperty("CTime")
     @JsonAlias({ "Ctime", "cTime" })
-    private int cTime;
+    private Integer cTime;
 
     @Min(value = 0, groups = VersionGroup.V2017.class)
     @Max(value = 99, groups = VersionGroup.V2017.class)
     @JsonProperty("VaseNo")
     @JsonbProperty("VaseNo")
-    private int vaseNo;
+    private Integer vaseNo;
 
     @ValidDate(format = "HHmmss", groups = VersionGroup.V2017.class)
     @JsonProperty("CstartTime")
@@ -170,7 +171,7 @@ public class CpData {
     @Max(value = 120, groups = VersionGroup.V2017.class)
     @JsonProperty("Stime")
     @JsonbProperty("Stime")
-    private int sTime;
+    private Integer sTime;
 
     @C(len = 6, groups = VersionGroup.V2017.class)
     @JsonProperty("InfoId")
@@ -226,19 +227,19 @@ public class CpData {
         this.exeRtn = exeRtn;
     }
 
-    public int getRtdInterval() {
+    public Integer getRtdInterval() {
         return rtdInterval;
     }
 
-    public void setRtdInterval(int rtdInterval) {
+    public void setRtdInterval(Integer rtdInterval) {
         this.rtdInterval = rtdInterval;
     }
 
-    public int getMinInterval() {
+    public Integer getMinInterval() {
         return minInterval;
     }
 
-    public void setMinInterval(int minInterval) {
+    public void setMinInterval(Integer minInterval) {
         this.minInterval = minInterval;
     }
 
@@ -346,19 +347,19 @@ public class CpData {
         this.dataFlag = dataFlag;
     }
 
-    public int getpNo() {
+    public Integer getpNo() {
         return pNo;
     }
 
-    public void setpNo(int pNo) {
+    public void setpNo(Integer pNo) {
         this.pNo = pNo;
     }
 
-    public int getpNum() {
+    public Integer getpNum() {
         return pNum;
     }
 
-    public void setpNum(int pNum) {
+    public void setpNum(Integer pNum) {
         this.pNum = pNum;
     }
 
@@ -378,43 +379,43 @@ public class CpData {
         this.newPW = newPW;
     }
 
-    public int getOverTime() {
+    public Integer getOverTime() {
         return overTime;
     }
 
-    public void setOverTime(int overTime) {
+    public void setOverTime(Integer overTime) {
         this.overTime = overTime;
     }
 
-    public int getReCount() {
+    public Integer getReCount() {
         return reCount;
     }
 
-    public void setReCount(int reCount) {
+    public void setReCount(Integer reCount) {
         this.reCount = reCount;
     }
 
-    public int getWarnTime() {
+    public Integer getWarnTime() {
         return warnTime;
     }
 
-    public void setWarnTime(int warnTime) {
+    public void setWarnTime(Integer warnTime) {
         this.warnTime = warnTime;
     }
 
-    public int getcTime() {
+    public Integer getcTime() {
         return cTime;
     }
 
-    public void setcTime(int cTime) {
+    public void setcTime(Integer cTime) {
         this.cTime = cTime;
     }
 
-    public int getVaseNo() {
+    public Integer getVaseNo() {
         return vaseNo;
     }
 
-    public void setVaseNo(int vaseNo) {
+    public void setVaseNo(Integer vaseNo) {
         this.vaseNo = vaseNo;
     }
 
@@ -426,11 +427,11 @@ public class CpData {
         this.cStartTime = cStartTime;
     }
 
-    public int getsTime() {
+    public Integer getsTime() {
         return sTime;
     }
 
-    public void setsTime(int sTime) {
+    public void setsTime(Integer sTime) {
         this.sTime = sTime;
     }
 
