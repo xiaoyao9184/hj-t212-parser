@@ -53,7 +53,7 @@ allprojects {
 
 
 project(':stream-reader') {
-    group 'com.xy.stream'
+//    group 'com.xy.stream'
     version "${version}"
 
     apply plugin: 'java'
@@ -73,7 +73,7 @@ project(':stream-reader') {
 }
 
 project(':segment-parser') {
-    group 'com.xy.format'
+//    group 'com.xy.format'
     version "${version}"
 
     apply plugin: 'java'
@@ -94,7 +94,7 @@ project(':segment-parser') {
 }
 
 project(':hj-t212-parser') {
-    group 'com.xy.format'
+//    group 'com.xy.format'
     version "${version}"
 
     apply plugin: 'java'
@@ -144,7 +144,7 @@ project(':hj-t212-parser') {
 }
 
 project(':hj-t212-translator') {
-    group 'com.xy.format'
+//    group 'com.xy.format'
     version "${version}"
 
     apply plugin: 'java'
