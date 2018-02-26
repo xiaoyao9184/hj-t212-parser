@@ -1,6 +1,7 @@
 # HJ/T212 Parser
 
 [![Build Status](https://travis-ci.org/xiaoyao9184/hj-t212-parser.svg?branch=master)](https://travis-ci.org/xiaoyao9184/hj-t212-parser)
+[![Artifact Status](https://jitpack.io/v/xiaoyao9184/hj-t212-parser.svg)](https://jitpack.io/#xiaoyao9184/hj-t212-parser)
 
 环保部212传输协议
 
