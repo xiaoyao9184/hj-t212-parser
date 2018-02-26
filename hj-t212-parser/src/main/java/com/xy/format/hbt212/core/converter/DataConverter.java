@@ -8,15 +8,11 @@ import com.xy.format.hbt212.model.verify.T212Map;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.Configured;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 
 /**
  * 转换器
@@ -28,6 +24,8 @@ public class DataConverter
         implements Converter<T212Map<String,Object>,Data>,
         Configured<DataConverter> {
 
+    private static String SPLIT = "-";
+    private static String SB = "SB";
     private static String REGEX_DEVICE = "SB.*-RS$|SB.*-RT$";
     private static String REGEX_LIVE_SIDE = ".*-Info$|.*-SN$";
     private static String REGEX_POLLUTION = ".*-.*";
@@ -45,6 +43,23 @@ public class DataConverter
         predicatePollution = Pattern.compile(REGEX_POLLUTION).asPredicate();
     }
 
+    /**
+     * 根据Key中的分隔符分组
+     * @param map Map
+     * @param split 分隔符
+     * @return 分组Map
+     */
+    private Map<String,Map<String,String>> groupBySplitKey(Map<String,String> map, String split){
+        Map<String,Map<String,String>> result = map.entrySet().stream()
+                .collect(Collectors.groupingBy(
+                        t -> t.getKey().split(split)[0],
+                        Collectors.toMap(
+                                kv -> kv.getKey().split(split)[1],
+                                Map.Entry::getValue
+                        )
+                ));
+        return result;
+    }
 
     /**
      * 转换 现场端
@@ -52,19 +67,8 @@ public class DataConverter
      * @return
      */
     private Map<String,LiveSide> convertLiveSide(Map<String,String> map){
-        Map<String,Map<String,String>> result = new HashMap<>();
-        map.forEach((key, value) -> {
-            String[] ks = key.split("-");
-            Map<String, String> f;
-            if (result.containsKey(ks[0])) {
-                f = result.get(ks[0]);
-            } else {
-                f = new HashMap<>();
-                result.put(ks[0], f);
-            }
-            f.put(ks[1], value);
-        });
-        return result.entrySet()
+        return groupBySplitKey(map,SPLIT)
+                .entrySet()
                 .stream()
                 .map(kv -> {
                     LiveSide liveSide = objectMapper.convertValue(kv.getValue(),LiveSide.class);
@@ -79,23 +83,12 @@ public class DataConverter
      * @return
      */
     private Map<String,Device> convertDevice(Map<String,String> map){
-        Map<String,Map<String,String>> result = new HashMap<>();
-        map.forEach((key, value) -> {
-            String[] ks = key.replace("SB","").split("-");
-            Map<String, String> f;
-            if (result.containsKey(ks[0])) {
-                f = result.get(ks[0]);
-            } else {
-                f = new HashMap<>();
-                result.put(ks[0], f);
-            }
-            f.put(ks[1], value);
-        });
-        return result.entrySet()
+        return groupBySplitKey(map,SPLIT)
+                .entrySet()
                 .stream()
                 .map(kv -> {
                     Device device = objectMapper.convertValue(kv.getValue(),Device.class);
-                    return new AbstractMap.SimpleEntry<>(kv.getKey(),device);
+                    return new AbstractMap.SimpleEntry<>(kv.getKey().replace(SB,""),device);
                 })
                 .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
     }
@@ -106,19 +99,8 @@ public class DataConverter
      * @return
      */
     private Map<String,Pollution> convertPollution(Map<String,String> map){
-        Map<String,Map<String,String>> result = new HashMap<>();
-        map.forEach((key, value) -> {
-            String[] ks = key.split("-");
-            Map<String, String> f;
-            if (result.containsKey(ks[0])) {
-                f = result.get(ks[0]);
-            } else {
-                f = new HashMap<>();
-                result.put(ks[0], f);
-            }
-            f.put(ks[1], value);
-        });
-        return result.entrySet()
+        return groupBySplitKey(map,SPLIT)
+                .entrySet()
                 .stream()
                 .map(kv -> {
                     Pollution pollution = objectMapper.convertValue(kv.getValue(),Pollution.class);
@@ -149,29 +131,38 @@ public class DataConverter
      */
     private Map<String,Object> convertDataLevel(Map<String,String> map){
         Map<String,Object> cp = new HashMap<>();
-        //v2017
+        //v2017 entry
         Map<String,String> d = filter(map,predicateDevice);
-        Map<String,Device> deviceMap = convertDevice(d);
-        d.keySet().stream().peek(map::remove);
-        cp.put(CpData.DEVICE,deviceMap);
+        if(!d.isEmpty()){
+            Map<String,Device> deviceMap = convertDevice(d);
+            cp.put(CpData.DEVICE,deviceMap);
+            d.keySet().forEach(map::remove);
+        }
 
         Map<String,String> ls = filter(map,predicateLiveSide);
-        Map<String,LiveSide> liveSideMap = convertLiveSide(ls);
-        ls.keySet().stream().peek(map::remove);
-        cp.put(CpData.LIVESIDE,liveSideMap);
+        if(!ls.isEmpty()){
+            Map<String,LiveSide> liveSideMap = convertLiveSide(ls);
+            cp.put(CpData.LIVESIDE,liveSideMap);
+            ls.keySet().forEach(map::remove);
+        }
 
-        //v2005
-        String flag = (String) map.get(DataElement.Flag.name());
-        List<DataFlag> dataFlags = convertDataFlag(flag);
-        map.remove(DataElement.Flag.name());
-        cp.put(Data.FLAG,dataFlags);
+        //v2005 entry
+        String flag = map.get(DataElement.Flag.name());
+        if(flag != null){
+            List<DataFlag> dataFlags = convertDataFlag(flag);
+            map.remove(DataElement.Flag.name());
+            cp.put(Data.FLAG,dataFlags);
+        }
 
         Map<String,String> p = filter(map,predicatePollution);
-        Map<String,Pollution> pollutionMap = convertPollution(p);
-        cp.put(CpData.POLLUTION,pollutionMap);
+        if(!p.isEmpty()){
+            Map<String,Pollution> pollutionMap = convertPollution(p);
+            cp.put(CpData.POLLUTION,pollutionMap);
+            p.keySet().forEach(map::remove);
+        }
 
+        //common entry must keep
         cp.putAll(map);
-
         return cp;
     }
 
@@ -199,14 +190,18 @@ public class DataConverter
     @SuppressWarnings("unchecked")
     private Data convertDataLevel(T212Map<String,Object> map){
         String flag = (String) map.get(DataElement.Flag.name());
-        map.remove(DataElement.Flag.name());
-        List<DataFlag> flagList = convertDataFlag(flag);
-        map.put(Data.FLAG,flagList);
+        if(flag != null){
+            List<DataFlag> flagList = convertDataFlag(flag);
+            //replace
+            map.put(Data.FLAG,flagList);
+        }
 
         Map<String,String> cp = (Map<String, String>) map.get(DataElement.CP.name());
-        map.remove(DataElement.CP.name());
-        Map<String,Object> cpMap = convertDataLevel(cp);
-        map.put(Data.CP,cpMap);
+        if(cp != null){
+            Map<String,Object> cpMap = convertDataLevel(cp);
+            //replace
+            map.put(Data.CP,cpMap);
+        }
 
         return objectMapper
                 .convertValue(map,Data.class);
