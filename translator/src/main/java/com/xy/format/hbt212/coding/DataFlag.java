@@ -21,7 +21,7 @@ public enum DataFlag implements CodeMean {
     private String meaning;
 
     DataFlag(String meaning){
-        this.code = name().substring(1);
+        this.code = name();
         this.meaning = meaning;
     }
 
