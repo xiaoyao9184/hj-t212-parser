@@ -30,7 +30,8 @@ public enum ProcessPollutionGas implements CodeMean, CodePattern, CodeMatch {
     g116xx("旁路挡板门开度", "[角]度", "N4"),
     g117xx("石膏排除泵状态", "无量纲", "N1"),
     g118xx("石膏排除泵电流", "安[培]", "N4.2"),
-    g119xx("脱硫率", "%", "N3.2"),
+    //协议冲突，修正为g200xx
+    g200xx("脱硫率", "%", "N3.2"),
     g201xx("脱硫塔内喷水泵电流", "安[培]", "N4.2"),
     g202xx("脱硫剂输送装置", "安[培]", "N4.2"),
     g203xx("称重给煤机计量信号", "无量纲", "N1"),
@@ -52,7 +53,7 @@ public enum ProcessPollutionGas implements CodeMean, CodePattern, CodeMatch {
     g307xx("旁路挡板开度", "[角]度", "N4"),
     g308xx("旁路挡板左右压差", "千帕", "N5.3"),
     //协议冲突
-    _g119xx("入口二氧化硫SO2", "毫克/立方米", "N3.3"),
+    g119xx("入口二氧化硫SO2", "毫克/立方米", "N3.3"),
     g120xx("入口氮氧化物NOx", "毫克/立方米", "N3.3"),
     g121xx("入口含氧量O2", "%", "N3.1"),
     g122xx("入口流量", "立方米/小时", "N4.3"),
