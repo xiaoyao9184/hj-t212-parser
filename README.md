@@ -8,8 +8,8 @@
 
 # 标准
 
-[污染源在线自动监控（监测）系统数据传输标准（HJ/T 212-2005）](http://kjs.mep.gov.cn/hjbhbz/bzwb/other/xxbz/200602/t20060201_73038.shtml)
-[污染物在线监控（监测）系统数据传输标准(HJ 212-2017代替HJ/T 212-2005)](http://kjs.mep.gov.cn/hjbhbz/bzwb/other/qt/201706/t20170608_415697.shtml)
+[污染源在线自动监控（监测）系统数据传输标准（HJ/T 212-2005）](http://kjs.mee.gov.cn/hjbhbz/bzwb/other/xxbz/200602/t20060201_73038.shtml)
+[污染物在线监控（监测）系统数据传输标准(HJ 212-2017代替HJ/T 212-2005)](http://kjs.mee.gov.cn/hjbhbz/bzwb/other/qt/201706/t20170608_415697.shtml)
 
 当前支持特性为：
 
@@ -40,7 +40,7 @@ dependencies {
 通过创建`T212Mapper`对象，获得读取、写入T212信息的功能
 
 ```java
-String h212 = "##0139ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817000;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
+String h212 = "##0139ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
 
 T212Mapper mapper = new T212Mapper()
                 .enableDefaultVerifyFeatures()
