@@ -29,6 +29,9 @@ public class SegmentParser
     private int parserFeature;
     private SegmentToken currentToken;
     private Stack<String> path;
+    private int keyMaxLength = 1024;
+    private int valueNormalLength = 1024;
+    private int valueMaxLength = 1024;
 
     public SegmentParser(Reader reader){
         this.reader = new PushbackReader(reader,3);
@@ -88,7 +91,7 @@ public class SegmentParser
                 break;
         }
 
-        CharBuffer buffer = CharBuffer.allocate(20);
+        CharBuffer buffer = CharBuffer.allocate(keyMaxLength);
 
         //之后的Token
         int len = ReaderStream.of(reader)
@@ -293,7 +296,7 @@ public class SegmentParser
 
         AtomicReference<Integer> deep = new AtomicReference<>(0);
         // @formatter:off
-        CharBuffer buffer = CharBuffer.allocate(basic ? 50 : 1024);
+        CharBuffer buffer = CharBuffer.allocate(basic ? valueNormalLength : valueMaxLength);
         boolean finalBasic = basic;
         int len = ReaderStream.of(reader)
                 .next()
@@ -440,6 +443,18 @@ public class SegmentParser
 
     public void setParserFeature(int parserFeature) {
         this.parserFeature = parserFeature;
+    }
+
+    public void setKeyMaxLength(int keyMaxLength) {
+        this.keyMaxLength = keyMaxLength;
+    }
+
+    public void setValueNormalLength(int valueNormalLength) {
+        this.valueNormalLength = valueNormalLength;
+    }
+
+    public void setValueMaxLength(int valueMaxLength) {
+        this.valueMaxLength = valueMaxLength;
     }
 
     @Override

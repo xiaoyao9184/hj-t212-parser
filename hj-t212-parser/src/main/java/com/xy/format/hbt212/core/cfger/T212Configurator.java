@@ -36,6 +36,12 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 public class T212Configurator
         extends MultipleConfiguratorAdapter {
 
+    // 定义 segment 项目中 key 和 value 所占字节长度
+    private static final int SEGMENT_KEY_MAX_LENGTH = 20;
+    private static final int SEGMENT_VALUE_MAX_LENGTH = 1024;
+    private static final int SEGMENT_VALUE_NORMAL_LENGTH = 50;
+
+
     private int segmentParserFeature;
     private int parserFeature;
 
@@ -189,6 +195,9 @@ public class T212Configurator
             parser.initToken();
         }
         parser.setParserFeature(segmentParserFeature);
+        parser.setKeyMaxLength(SEGMENT_KEY_MAX_LENGTH);
+        parser.setValueMaxLength(SEGMENT_VALUE_MAX_LENGTH);
+        parser.setValueNormalLength(SEGMENT_VALUE_NORMAL_LENGTH);
     }
 
     /**
