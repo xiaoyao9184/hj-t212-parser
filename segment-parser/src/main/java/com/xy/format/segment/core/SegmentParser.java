@@ -88,7 +88,7 @@ public class SegmentParser
                 break;
         }
 
-        CharBuffer buffer = CharBuffer.allocate(10);
+        CharBuffer buffer = CharBuffer.allocate(20);
 
         //之后的Token
         int len = ReaderStream.of(reader)
