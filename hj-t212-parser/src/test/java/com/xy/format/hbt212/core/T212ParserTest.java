@@ -2,6 +2,7 @@ package com.xy.format.hbt212.core;
 
 import com.xy.format.hbt212.core.feature.ParserFeature;
 import com.xy.format.hbt212.exception.T212FormatException;
+import com.xy.format.hbt212.model.Data;
 import com.xy.format.segment.base.cfger.Feature;
 import org.junit.Test;
 
@@ -9,11 +10,33 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by xiaoyao9184 on 2017/12/19.
  */
 public class T212ParserTest {
+
+    @Test
+    public void example() throws IOException, T212FormatException {
+        String h212 = "##0136ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
+
+        T212Mapper mapper = new T212Mapper()
+                .enableDefaultVerifyFeatures()
+                .enableDefaultParserFeatures();
+
+        //从T212字符串中读取Data对象
+        Data data = mapper.readData(h212);
+
+        //.... use data
+
+        //create data and set it
+        data.setPw("000000");
+        //将Data对象写入成T212字符串
+        String result = mapper.writeDataAsString(data);
+
+        assertEquals(result,"##0136ST=32;CN=2011;PW=000000;MN=LD130133000015;CP=&&DataTime=20160824003817;011-Rtd=231.0,011-Flag=N;B01-Rtd=36.91;060-Rtd=1.803,060-Flag=N&&1dc0\r\n");
+    }
 
     @Test
     public void parse() {

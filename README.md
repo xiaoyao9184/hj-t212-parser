@@ -38,6 +38,7 @@ dependencies {
 ```
 
 通过创建`T212Mapper`对象，获得读取、写入T212信息的功能
+[查看此单元代码](https://github.com/xiaoyao9184/hj-t212-parser/blob/54eccf28a0ac8a147b163270d5028e6d6fc26901/hj-t212-parser/src/test/java/com/xy/format/hbt212/core/T212ParserTest.java#L20=L39)
 
 ```java
 String h212 = "##0136ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
@@ -54,7 +55,7 @@ Data data = mapper.readData(h212);
 //create data and set it
 data.setPw("000000");
 //将Data对象写入成T212字符串
-// String result = mapper.writeMapAsString(data);
+String result = mapper.writeDataAsString(data);
 
 ```
 
