@@ -40,7 +40,7 @@ dependencies {
 通过创建`T212Mapper`对象，获得读取、写入T212信息的功能
 
 ```java
-String h212 = "##0139ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
+String h212 = "##0136ST=32;CN=2011;PW=123456;MN=LD130133000015;CP=&&DataTime=20160824003817;B01-Rtd=36.91;011-Rtd=231.0,011-Flag=N;060-Rtd=1.803,060-Flag=N&&4980\r\n";
 
 T212Mapper mapper = new T212Mapper()
                 .enableDefaultVerifyFeatures()
@@ -54,7 +54,7 @@ Data data = mapper.readData(h212);
 //create data and set it
 data.setPw("000000");
 //将Data对象写入成T212字符串
-String result = mapper.writeMapAsString(data);
+// String result = mapper.writeMapAsString(data);
 
 ```
 
