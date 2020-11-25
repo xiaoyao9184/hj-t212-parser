@@ -138,7 +138,7 @@ public class DataReverseConverter
             return "";
         }
         for (DataFlag dataFlag : flag) {
-            i = dataFlag.getBit() & i;
+            i = dataFlag.getBit() | i;
         }
         return Integer.toString(i);
     }
