@@ -53,4 +53,22 @@ public class T212GeneratorTest {
         }
     }
 
+    @Test
+    public void testWriteHexInt32() {
+        StringWriter writer = new StringWriter();
+        T212Generator generator = new T212Generator(writer);
+        generator.setGeneratorFeature(Feature.collectFeatureDefaults(GeneratorFeature.class));
+        try {
+            assertEquals(generator.writeHexInt32(12),4);
+            assertEquals(generator.writeHexInt32(123),4);
+            assertEquals(generator.writeHexInt32(1234),4);
+
+            assertEquals(writer.toString(),"000c007b04d2");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            generator.close();
+        }
+    }
+
 }
