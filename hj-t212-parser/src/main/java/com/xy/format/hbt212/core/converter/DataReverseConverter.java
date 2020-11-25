@@ -2,17 +2,13 @@ package com.xy.format.hbt212.core.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xy.format.hbt212.base.Converter;
-import com.xy.format.hbt212.model.*;
-import com.xy.format.hbt212.model.verify.DataElement;
-import com.xy.format.hbt212.model.verify.T212Map;
+import com.xy.format.hbt212.model.standard.*;
+import com.xy.format.hbt212.model.expand.T212Map;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.Configured;
 
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -34,7 +30,7 @@ public class DataReverseConverter
      * @param map
      * @return
      */
-    private Map<String,Map<String,String>> convertLiveSide(Map<String,LiveSide> map){
+    private Map<String,Map<String,String>> convertLiveSide(Map<String, LiveSide> map){
         if(map == null){
             return null;
         }
@@ -54,7 +50,7 @@ public class DataReverseConverter
      * @param map
      * @return
      */
-    private Map<String,Map<String,String>> convertDevice(Map<String,Device> map){
+    private Map<String,Map<String,String>> convertDevice(Map<String, Device> map){
         if(map == null){
             return null;
         }

@@ -2,7 +2,7 @@ package com.xy.format.hbt212.core;
 
 import com.xy.format.hbt212.core.feature.ParserFeature;
 import com.xy.format.hbt212.exception.T212FormatException;
-import com.xy.format.hbt212.model.Data;
+import com.xy.format.hbt212.model.standard.Data;
 import com.xy.format.segment.base.cfger.Feature;
 import org.junit.Test;
 

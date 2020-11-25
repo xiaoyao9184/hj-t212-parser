@@ -4,13 +4,12 @@ import com.xy.format.hbt212.core.converter.DataConverter;
 import com.xy.format.hbt212.core.T212Parser;
 import com.xy.format.hbt212.core.VerifyUtil;
 import com.xy.format.hbt212.exception.T212FormatException;
-import com.xy.format.hbt212.model.Data;
-import com.xy.format.hbt212.model.DataFlag;
-import com.xy.format.hbt212.model.verify.DataElement;
-import com.xy.format.hbt212.model.verify.PacketElement;
-import com.xy.format.hbt212.model.verify.T212Map;
-import com.xy.format.hbt212.model.verify.groups.ModeGroup;
-import com.xy.format.hbt212.model.verify.groups.VersionGroup;
+import com.xy.format.hbt212.model.standard.Data;
+import com.xy.format.hbt212.model.standard.DataFlag;
+import com.xy.format.hbt212.model.element.PacketElement;
+import com.xy.format.hbt212.model.expand.T212Map;
+import com.xy.format.hbt212.model.verify.groups.Group;
+import com.xy.format.hbt212.model.verify.groups.Intersect;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.Configured;
 import com.xy.format.segment.core.SegmentParser;
@@ -18,15 +17,12 @@ import com.xy.format.segment.core.deser.SegmentDeserializer;
 import com.xy.format.segment.exception.SegmentFormatException;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import javax.validation.groups.Default;
 import java.io.CharArrayReader;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.xy.format.hbt212.core.T212Parser.crc16Checkout;
 import static com.xy.format.hbt212.core.feature.VerifyFeature.*;
@@ -106,13 +102,15 @@ public class DataDeserializer
         List<Class> groups = new ArrayList<>();
         groups.add(Default.class);
         if(DataFlag.V0.isMarked(result.getDataFlag())){
-            groups.add(VersionGroup.V2017.class);
+            groups.add(Group.Version.V2017.class);
         }else{
-            groups.add(VersionGroup.V2005.class);
+            groups.add(Group.Version.V2005.class);
         }
         if(DataFlag.D.isMarked(result.getDataFlag())){
-            groups.add(ModeGroup.UseSubPacket.class);
+            groups.add(Group.SubPack.class);
         }
+
+        Intersect.intersect(groups);
 
         Set<ConstraintViolation<Data>> constraintViolationSet =
                 validator.validate(result,groups.toArray(new Class[]{}));

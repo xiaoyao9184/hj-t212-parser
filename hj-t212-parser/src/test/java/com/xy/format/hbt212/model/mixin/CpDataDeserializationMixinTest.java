@@ -2,7 +2,7 @@ package com.xy.format.hbt212.model.mixin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xy.format.hbt212.model.CpData;
+import com.xy.format.hbt212.model.standard.CpData;
 import org.junit.Test;
 
 import java.util.HashMap;

@@ -1,15 +1,16 @@
 package com.xy.format.hbt212.model.mixin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.xy.format.hbt212.model.CpData;
-import com.xy.format.hbt212.model.DataFlag;
+import com.xy.format.hbt212.model.standard.CpData;
+import com.xy.format.hbt212.model.standard.DataFlag;
+import com.xy.format.hbt212.model.standard.Data;
 
 import java.util.List;
 
 /**
  * 混合
  * 序列化
- * @see com.xy.format.hbt212.model.Data 时使用
+ * @see Data 时使用
  * Created by xiaoyao9184 on 2017/12/19.
  */
 public abstract class DataSerializationMixin {

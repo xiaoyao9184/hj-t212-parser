@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.xy.format.hbt212.model.*;
+import com.xy.format.hbt212.model.standard.*;
 
 import java.util.List;
 import java.util.Map;
@@ -113,9 +113,9 @@ public abstract class CpDataDeserializationMixin {
     abstract void setPollution(Map<String, Pollution> pollution);
 
     @JsonIgnore
-    abstract void setDevice(Map<String,Device> device);
+    abstract void setDevice(Map<String, Device> device);
 
     @JsonIgnore
-    abstract void setLiveSide(Map<String,LiveSide> liveSide);
+    abstract void setLiveSide(Map<String, LiveSide> liveSide);
 
 }

@@ -1,8 +1,8 @@
 package com.xy.format.hbt212.core;
 
-import com.xy.format.hbt212.model.CpData;
-import com.xy.format.hbt212.model.Data;
-import com.xy.format.hbt212.model.Pollution;
+import com.xy.format.hbt212.model.standard.CpData;
+import com.xy.format.hbt212.model.standard.Data;
+import com.xy.format.hbt212.model.standard.Pollution;
 import org.junit.Test;
 
 import java.math.BigDecimal;

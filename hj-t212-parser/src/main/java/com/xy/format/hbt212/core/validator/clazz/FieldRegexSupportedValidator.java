@@ -1,6 +1,6 @@
 package com.xy.format.hbt212.core.validator.clazz;
 
-import com.xy.format.hbt212.model.verify.T212Map;
+import com.xy.format.hbt212.model.expand.T212Map;
 
 import javax.validation.ConstraintValidator;
 import java.lang.annotation.Annotation;
@@ -11,12 +11,12 @@ import java.util.regex.Pattern;
 /**
  * Created by xiaoyao9184 on 2018/1/22.
  */
-public abstract class T212MapFieldValidator<A extends Annotation,AF extends Annotation>
+public abstract class FieldRegexSupportedValidator<A extends Annotation,AF extends Annotation>
         extends FieldValidator<A,T212Map<String,?>,AF,String> {
 
     private Predicate<String> predicate;
 
-    public T212MapFieldValidator(ConstraintValidator<AF, String> constraintValidator) {
+    public FieldRegexSupportedValidator(ConstraintValidator<AF, String> constraintValidator) {
         super(constraintValidator);
     }
 

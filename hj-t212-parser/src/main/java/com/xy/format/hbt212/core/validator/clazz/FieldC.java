@@ -1,7 +1,6 @@
 package com.xy.format.hbt212.core.validator.clazz;
 
 import com.xy.format.hbt212.core.validator.field.C;
-import com.xy.format.hbt212.core.validator.field.N;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -19,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
 @Repeatable(FieldC.List.class)
-@Constraint(validatedBy = T212MapCValidator.class)
+@Constraint(validatedBy = FieldCValidator.class)
 public @interface FieldC {
 
     String field() default "";

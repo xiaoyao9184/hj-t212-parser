@@ -1,9 +1,7 @@
 package com.xy.format.hbt212.model.mixin;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xy.format.hbt212.model.CpData;
-import com.xy.format.hbt212.model.Data;
+import com.xy.format.hbt212.model.standard.Data;
 import org.junit.Test;
 
 import java.util.HashMap;

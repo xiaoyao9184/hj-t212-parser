@@ -1,14 +1,12 @@
 package com.xy.format.hbt212.core.deser;
 
 import com.xy.format.hbt212.exception.T212FormatException;
-import com.xy.format.hbt212.model.DataFlag;
-import com.xy.format.hbt212.model.verify.DataElement;
-import com.xy.format.hbt212.model.verify.PacketElement;
-import com.xy.format.hbt212.model.verify.T212Map;
-import com.xy.format.hbt212.model.verify.T212MapEntry;
-import com.xy.format.hbt212.model.verify.groups.ModeGroup;
-import com.xy.format.hbt212.model.verify.groups.T212MapLevelGroup;
-import com.xy.format.hbt212.model.verify.groups.VersionGroup;
+import com.xy.format.hbt212.model.standard.DataFlag;
+import com.xy.format.hbt212.model.element.DataElement;
+import com.xy.format.hbt212.model.element.PacketElement;
+import com.xy.format.hbt212.model.expand.T212Map;
+import com.xy.format.hbt212.model.expand.T212MapEntry;
+import com.xy.format.hbt212.model.verify.groups.*;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.Configured;
 import com.xy.format.hbt212.core.T212Parser;
@@ -107,13 +105,15 @@ public class DataLevelMapDeserializer
             flag = Integer.valueOf(f);
         }
         if(DataFlag.V0.isMarked(flag)){
-            groups.add(VersionGroup.V2017.class);
+            groups.add(Group.Version.V2017.class);
         }else{
-            groups.add(VersionGroup.V2005.class);
+            groups.add(Group.Version.V2005.class);
         }
         if(DataFlag.D.isMarked(flag)){
-            groups.add(ModeGroup.UseSubPacket.class);
+            groups.add(Group.SubPack.class);
         }
+
+        Intersect.intersect(groups);
 
         Set<ConstraintViolation<T212Map>> constraintViolationSet =
                 validator.validate(t212Map,groups.toArray(new Class[]{}));
@@ -123,33 +123,6 @@ public class DataLevelMapDeserializer
             }else{
                 //TODO set context
             }
-        }
-    }
-
-    @Deprecated
-    private void verifyByVersion(Map<String, String> result) throws T212FormatException {
-        List<Class> groups = new ArrayList<>();
-        groups.add(Default.class);
-        groups.add(T212MapLevelGroup.DataLevel.class);
-
-        int flag = 0;
-        T212Map t212Map;
-        if(result.containsKey(DataElement.Flag.name())){
-            String f = result.get(DataElement.Flag.name());
-            flag = Integer.valueOf(f);
-        }
-        if(DataFlag.V0.isMarked(flag)){
-            t212Map = T212Map.create2017(result);
-        }else{
-            t212Map = T212Map.create2005(result);
-        }
-        if(DataFlag.D.isMarked(flag)){
-            groups.add(ModeGroup.UseSubPacket.class);
-        }
-
-        Set<ConstraintViolation<T212Map>> constraintViolationSet = validator.validate(t212Map,groups.toArray(new Class[]{}));
-        if(!constraintViolationSet.isEmpty()) {
-            create_format_exception(constraintViolationSet,result);
         }
     }
 

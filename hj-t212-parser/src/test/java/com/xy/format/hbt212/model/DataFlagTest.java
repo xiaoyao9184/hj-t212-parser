@@ -1,5 +1,6 @@
 package com.xy.format.hbt212.model;
 
+import com.xy.format.hbt212.model.standard.DataFlag;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

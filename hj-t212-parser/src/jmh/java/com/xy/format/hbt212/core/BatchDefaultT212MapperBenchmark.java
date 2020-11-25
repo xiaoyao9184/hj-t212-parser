@@ -3,7 +3,7 @@ package com.xy.format.hbt212.core;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.Level;
 import com.xy.format.hbt212.exception.T212FormatException;
-import com.xy.format.hbt212.model.Data;
+import com.xy.format.hbt212.model.standard.Data;
 import org.openjdk.jmh.annotations.*;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -16,7 +16,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

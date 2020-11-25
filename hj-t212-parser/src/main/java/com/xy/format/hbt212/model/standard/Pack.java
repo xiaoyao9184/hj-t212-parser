@@ -1,4 +1,4 @@
-package com.xy.format.hbt212.model;
+package com.xy.format.hbt212.model.standard;
 
 /**
  * 通信包

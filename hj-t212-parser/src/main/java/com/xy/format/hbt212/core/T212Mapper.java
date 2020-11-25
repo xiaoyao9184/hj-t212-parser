@@ -10,7 +10,7 @@ import com.xy.format.hbt212.core.ser.DataSerializer;
 import com.xy.format.hbt212.core.ser.PackLevelSerializer;
 import com.xy.format.hbt212.core.ser.T212Serializer;
 import com.xy.format.hbt212.exception.T212FormatException;
-import com.xy.format.hbt212.model.Data;
+import com.xy.format.hbt212.model.standard.Data;
 import com.xy.format.segment.base.cfger.Feature;
 import com.xy.format.segment.core.feature.SegmentParserFeature;
 

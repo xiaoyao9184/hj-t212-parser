@@ -1,14 +1,15 @@
 package com.xy.format.hbt212.model.mixin;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.xy.format.hbt212.model.DataFlag;
+import com.xy.format.hbt212.model.standard.DataFlag;
+import com.xy.format.hbt212.model.standard.Data;
 
 import java.util.List;
 
 /**
  * 混合
  * 解决Map转为
- * @see com.xy.format.hbt212.model.Data 时剔除的字段
+ * @see Data 时剔除的字段
  * Created by xiaoyao9184 on 2017/12/19.
  */
 @Deprecated

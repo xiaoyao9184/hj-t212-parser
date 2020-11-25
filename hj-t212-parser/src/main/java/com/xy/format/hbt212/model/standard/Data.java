@@ -1,16 +1,15 @@
-package com.xy.format.hbt212.model;
+package com.xy.format.hbt212.model.standard;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xy.format.hbt212.core.validator.field.C;
 import com.xy.format.hbt212.core.validator.field.ValidDate;
-import com.xy.format.hbt212.model.verify.groups.ModeGroup;
-import com.xy.format.hbt212.model.verify.groups.VersionGroup;
+import com.xy.format.hbt212.model.verify.groups.Group;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.json.bind.annotation.JsonbProperty;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 /**
@@ -30,40 +29,45 @@ public class Data {
     private String qn;
 
     @ApiModelProperty(value = "总包号", name = "PNUM")
-    @Max(value = 9999)
-    @Min(value = 1, groups = ModeGroup.UseSubPacket.class)
+    @Max(value = 9999, groups = Group.Version.V2005.class)
+    @Max(value = 999999999, groups = Group.Version.V2017.class)
+    @Min(value = 1, groups = Group.SubPack.class)
     @JsonProperty("PNUM")
     @JsonbProperty("PNUM")
     private Integer pNum;
 
     @ApiModelProperty(value = "包号", name = "PNO")
-    @Max(value = 9999)
-    @Min(value = 1, groups = ModeGroup.UseSubPacket.class)
+    @Max(value = 9999, groups = Group.Version.V2005.class)
+    @Max(value = 99999999, groups = Group.Version.V2017.class)
+    @Min(value = 1, groups = Group.SubPack.class)
     @JsonProperty("PNO")
     @JsonbProperty("PNO")
     private Integer pNo;
 
     @ApiModelProperty(value = "系统编号", name = "ST")
-    @C(len = 2)
+    @C(len = 5, groups = Group.Version.V2005.class)
+    @C(len = 5, groups = Group.Version.V2017.class)
     @JsonProperty("ST")
     @JsonbProperty("ST")
     private String st;
 
     @ApiModelProperty(value = "命令编号", name = "CN")
-    @C(len = 4)
+    @C(len = 7, groups = Group.Version.V2005.class)
+    @C(len = 7, groups = Group.Version.V2017.class)
     @JsonProperty("CN")
     @JsonbProperty("CN")
     private String cn;
 
     @ApiModelProperty(value = "访问密码", name = "PW")
-    @C(len = 6)
+    @C(len = 6, groups = Group.Version.V2005.class)
+    @C(len = 9, groups = Group.Version.V2017.class)
     @JsonProperty("PW")
     @JsonbProperty("PW")
     private String pw;
 
     @ApiModelProperty(value = "设备唯一标识", name = "MN")
-    @C(len = 14, groups = VersionGroup.V2005.class)
-    @C(len = 24, groups = VersionGroup.V2017.class)
+    @C(len = 14, groups = Group.Version.V2005.class)
+    @C(len = 24, groups = Group.Version.V2017.class)
     @JsonProperty("MN")
     @JsonbProperty("MN")
     private String mn;

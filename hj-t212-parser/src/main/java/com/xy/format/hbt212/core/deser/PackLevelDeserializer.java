@@ -1,12 +1,12 @@
 package com.xy.format.hbt212.core.deser;
 
 import com.xy.format.hbt212.exception.T212FormatException;
-import com.xy.format.hbt212.model.verify.PacketElement;
+import com.xy.format.hbt212.model.element.PacketElement;
 import com.xy.format.segment.base.cfger.Configurator;
 import com.xy.format.segment.base.cfger.Configured;
 import com.xy.format.hbt212.core.T212Parser;
 import com.xy.format.hbt212.core.VerifyUtil;
-import com.xy.format.hbt212.model.Pack;
+import com.xy.format.hbt212.model.standard.Pack;
 
 import java.io.IOException;
 

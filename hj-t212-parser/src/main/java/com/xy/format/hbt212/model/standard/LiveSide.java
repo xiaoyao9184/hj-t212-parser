@@ -1,8 +1,8 @@
-package com.xy.format.hbt212.model;
+package com.xy.format.hbt212.model.standard;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xy.format.hbt212.core.validator.field.C;
-import com.xy.format.hbt212.model.verify.groups.VersionGroup;
+import com.xy.format.hbt212.model.verify.groups.Group;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.json.bind.annotation.JsonbProperty;
@@ -19,7 +19,7 @@ public class LiveSide {
     private String info;
 
     @ApiModelProperty(value = "在线监控（监测）仪器仪表编码", name = "SN")
-    @C(len = 24, groups = VersionGroup.V2017.class)
+    @C(len = 24, groups = Group.Version.V2017.class)
     @JsonProperty("SN")
     @JsonbProperty("SN")
     private String sn;

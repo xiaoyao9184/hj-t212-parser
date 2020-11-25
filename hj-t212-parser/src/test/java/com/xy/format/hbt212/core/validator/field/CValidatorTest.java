@@ -1,6 +1,5 @@
 package com.xy.format.hbt212.core.validator.field;
 
-import com.xy.format.hbt212.model.verify.T212Map;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;

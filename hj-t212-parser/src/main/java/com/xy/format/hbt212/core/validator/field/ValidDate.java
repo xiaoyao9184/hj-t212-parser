@@ -1,6 +1,6 @@
 package com.xy.format.hbt212.core.validator.field;
 
-import com.xy.format.hbt212.core.validator.clazz.T212MapValidDateValidator;
+import com.xy.format.hbt212.core.validator.clazz.FieldValidDateValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
 @Repeatable(ValidDate.List.class)
-@Constraint(validatedBy = {ValidDateValidator.class, T212MapValidDateValidator.class})
+@Constraint(validatedBy = {ValidDateValidator.class, FieldValidDateValidator.class})
 public @interface ValidDate {
 
     String format();

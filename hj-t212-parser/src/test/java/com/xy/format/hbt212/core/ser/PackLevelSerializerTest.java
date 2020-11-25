@@ -4,7 +4,7 @@ import com.xy.format.hbt212.core.T212Generator;
 import com.xy.format.hbt212.core.cfger.T212Configurator;
 import com.xy.format.hbt212.core.feature.VerifyFeature;
 import com.xy.format.hbt212.exception.T212FormatException;
-import com.xy.format.hbt212.model.Pack;
+import com.xy.format.hbt212.model.standard.Pack;
 import org.junit.Test;
 
 import java.io.IOException;

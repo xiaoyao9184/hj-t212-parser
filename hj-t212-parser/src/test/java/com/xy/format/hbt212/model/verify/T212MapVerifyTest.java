@@ -1,7 +1,9 @@
 package com.xy.format.hbt212.model.verify;
 
+import com.xy.format.hbt212.model.expand.T212Map;
+import com.xy.format.hbt212.model.verify.groups.Group;
+import com.xy.format.hbt212.model.verify.groups.Intersect;
 import com.xy.format.hbt212.model.verify.groups.T212MapLevelGroup;
-import com.xy.format.hbt212.model.verify.groups.VersionGroup;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -87,10 +90,10 @@ public class T212MapVerifyTest {
         Validator validator = factory.getValidator();
 
         Set<ConstraintViolation<T212Map>> e2005 = validator.validate(dataLevel,Default.class,
-                T212MapLevelGroup.DataLevel.class, VersionGroup.V2005.class);
+                T212MapLevelGroup.DataLevel.class, Group.Version.V2005.class);
         assertTrue(e2005.isEmpty());
         Set<ConstraintViolation<T212Map>> e2017 = validator.validate(dataLevel,Default.class,
-                T212MapLevelGroup.DataLevel.class, VersionGroup.V2017.class);
+                T212MapLevelGroup.DataLevel.class, Group.Version.V2017.class);
         assertTrue(e2017.isEmpty());
     }
 
@@ -108,10 +111,10 @@ public class T212MapVerifyTest {
         T212Map t212Map = T212Map.createDataLevel(m);
 
         Set<ConstraintViolation<T212Map>> e2005 = validator.validate(t212Map,Default.class,
-                VersionGroup.V2005.class);
+                Group.Version.V2005.class);
         assertTrue(e2005.size() > 0);
         Set<ConstraintViolation<T212Map>> e2017 = validator.validate(t212Map,Default.class,
-                VersionGroup.V2017.class);
+                Group.Version.V2017.class);
         assertTrue(e2017.size() > 0);
     }
 
@@ -121,10 +124,10 @@ public class T212MapVerifyTest {
         Validator validator = factory.getValidator();
 
         Set<ConstraintViolation<T212Map>> e2005 = validator.validate(cpDataLevel,Default.class,
-                T212MapLevelGroup.CpDataLevel.class, VersionGroup.V2005.class);
+                T212MapLevelGroup.CpDataLevel.class, Group.Version.V2005.class);
         assertTrue(e2005.isEmpty());
         Set<ConstraintViolation<T212Map>> e2017 = validator.validate(cpDataLevel,Default.class,
-                T212MapLevelGroup.CpDataLevel.class, VersionGroup.V2017.class);
+                T212MapLevelGroup.CpDataLevel.class, Group.Version.V2017.class);
         assertTrue(e2017.isEmpty());
     }
 
@@ -152,11 +155,51 @@ public class T212MapVerifyTest {
         T212Map t212Map = T212Map.createCpDataLevel(data);
 
         Set<ConstraintViolation<T212Map>> e2005 = validator.validate(t212Map,Default.class,
-                VersionGroup.V2005.class);
+                Group.Version.V2005.class);
         assertTrue(e2005.size() > 0);
         Set<ConstraintViolation<T212Map>> e2017 = validator.validate(t212Map,Default.class,
-                VersionGroup.V2017.class);
+                Group.Version.V2017.class);
         assertTrue(e2017.size() > 0);
+    }
+
+
+    @Test
+    public void testIntersectSubPack(){
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        dataLevel.clear();
+        dataLevel.put("PNUM","12345");
+        dataLevel.put("PNO","2");
+        Set<ConstraintViolation<T212Map>> e2005 = validator.validate(dataLevel,Default.class,
+                T212MapLevelGroup.DataLevel.class,
+                Group.Version.V2005.class,
+                Intersect.SubPacket.Version.V2005.class);
+        assertEquals(e2005.size(),1);
+        Set<ConstraintViolation<T212Map>> e2017 = validator.validate(dataLevel,Default.class,
+                T212MapLevelGroup.DataLevel.class,
+                Group.Version.V2017.class,
+                Intersect.SubPacket.Version.V2017.class);
+        assertTrue(e2017.isEmpty());
+    }
+
+
+    @Test
+    public void testFlagExpand(){
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        dataLevel.clear();
+        dataLevel.put("Flag","256");
+        Set<ConstraintViolation<T212Map>> e2005 = validator.validate(dataLevel,Default.class,
+                T212MapLevelGroup.DataLevel.class,
+                Group.Version.V2017.class);
+        assertEquals(e2005.size(),1);
+        dataLevel.put("Flag","255");
+        Set<ConstraintViolation<T212Map>> e2017 = validator.validate(dataLevel,Default.class,
+                T212MapLevelGroup.DataLevel.class,
+                Group.Version.V2017.class);
+        assertTrue(e2017.isEmpty());
     }
 
 }

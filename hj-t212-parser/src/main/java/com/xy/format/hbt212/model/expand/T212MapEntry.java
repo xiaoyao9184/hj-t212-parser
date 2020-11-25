@@ -1,9 +1,10 @@
-package com.xy.format.hbt212.model.verify;
+package com.xy.format.hbt212.model.expand;
 
 import com.xy.format.hbt212.core.validator.field.C;
 import com.xy.format.hbt212.core.validator.field.N;
 import com.xy.format.hbt212.core.validator.field.ValidDate;
-import com.xy.format.hbt212.model.verify.groups.TypeGroup;
+import com.xy.format.hbt212.model.element.DataElement;
+import com.xy.format.hbt212.model.verify.groups.GroupCommon;
 
 import javax.validation.constraints.*;
 
@@ -37,19 +38,19 @@ public class T212MapEntry {
     @Min(value = 1, groups = DataElement.Group.Flag.class)
     @Max(value = 960, groups = DataElement.Group.CP.class)
 
-    @ValidDate(format = "yyyyMMddHHmmss", groups = TypeGroup.YYYYMMDDhhmmss.class)
-    @ValidDate(format = "HHmmss", groups = TypeGroup.hhmmss.class)
-    @N(integer = 1, groups = TypeGroup.N1.class)
-    @N(integer = 2, groups = TypeGroup.N2.class)
-    @N(integer = 3, groups = TypeGroup.N3.class)
-    @N(integer = 4, groups = TypeGroup.N4.class)
-    @N(integer = 14, groups = TypeGroup.N14.class)
-    @N(integer = 2, fraction = 2, groups = TypeGroup.N2_2.class)
-    @N(integer = 3, fraction = 1, groups = TypeGroup.N3_1.class)
-    @C(len = 1, groups = TypeGroup.C1.class)
-    @C(len = 4, groups = TypeGroup.C4.class)
-    @C(len = 6, groups = TypeGroup.C6.class)
-    @C(len = 24, groups = TypeGroup.C24.class)
+    @ValidDate(format = "yyyyMMddHHmmss", groups = GroupCommon.YYYYMMDDhhmmss.class)
+    @ValidDate(format = "HHmmss", groups = GroupCommon.hhmmss.class)
+    @N(integer = 1, groups = GroupCommon.N1.class)
+    @N(integer = 2, groups = GroupCommon.N2.class)
+    @N(integer = 3, groups = GroupCommon.N3.class)
+    @N(integer = 4, groups = GroupCommon.N4.class)
+    @N(integer = 14, groups = GroupCommon.N14.class)
+    @N(integer = 2, fraction = 2, groups = GroupCommon.N2_2.class)
+    @N(integer = 3, fraction = 1, groups = GroupCommon.N3_1.class)
+    @C(len = 1, groups = GroupCommon.C1.class)
+    @C(len = 4, groups = GroupCommon.C4.class)
+    @C(len = 6, groups = GroupCommon.C6.class)
+    @C(len = 24, groups = GroupCommon.C24.class)
 
     private String value;
 

@@ -1,7 +1,7 @@
 package com.xy.format.hbt212.model.mixin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.xy.format.hbt212.model.*;
+import com.xy.format.hbt212.model.standard.*;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 混合
  * 序列化
- * @see com.xy.format.hbt212.model.Data 时使用
+ * @see Data 时使用
  * Created by xiaoyao9184 on 2017/12/19.
  */
 public abstract class CpDataSerializationMixin {
@@ -108,9 +108,9 @@ public abstract class CpDataSerializationMixin {
     abstract Map<String, Pollution> getPollution();
 
     @JsonProperty("Device")
-    abstract Map<String,Device> getDevice();
+    abstract Map<String, Device> getDevice();
 
     @JsonProperty("Info")
-    abstract Map<String,LiveSide> getLiveSide();
+    abstract Map<String, LiveSide> getLiveSide();
 
 }

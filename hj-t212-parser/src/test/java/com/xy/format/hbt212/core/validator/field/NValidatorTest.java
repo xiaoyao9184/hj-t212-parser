@@ -35,5 +35,58 @@ public class NValidatorTest {
         public String n1;
         @N(integer = 2,fraction = 2)
         public String n2_2;
+        @N(integer = 3)
+        public String n3;
+        @N(integer = 1)
+        public String optional;
     }
+
+
+    @Test
+    public void testNumberLength(){
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        TestBean bean = new TestBean();
+        bean.n3 = "1";
+
+        Set<ConstraintViolation<TestBean>> e1 = validator.validate(bean,
+                Default.class);
+        assertEquals(e1.size(),0);
+
+        bean.n3 = "12";
+        Set<ConstraintViolation<TestBean>> e2 = validator.validate(bean,
+                Default.class);
+        assertEquals(e2.size(),0);
+
+        bean.n3 = "123";
+        Set<ConstraintViolation<TestBean>> e3 = validator.validate(bean,
+                Default.class);
+        assertEquals(e3.size(),0);
+
+        bean.n3 = "1234";
+        Set<ConstraintViolation<TestBean>> e4 = validator.validate(bean,
+                Default.class);
+        assertEquals(e4.size(),1);
+    }
+
+    @Test
+    public void testOptional(){
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        TestBean bean = new TestBean();
+        bean.optional = "12";
+
+        Set<ConstraintViolation<TestBean>> e1 = validator.validate(bean,
+                Default.class);
+        assertEquals(e1.size(),1);
+
+        bean.optional = null;
+        Set<ConstraintViolation<TestBean>> e2 = validator.validate(bean,
+                Default.class);
+        assertEquals(e2.size(),0);
+
+    }
+
 }

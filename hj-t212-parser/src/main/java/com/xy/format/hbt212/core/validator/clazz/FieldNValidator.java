@@ -2,18 +2,18 @@ package com.xy.format.hbt212.core.validator.clazz;
 
 import com.xy.format.hbt212.core.validator.field.N;
 import com.xy.format.hbt212.core.validator.field.NValidator;
-import com.xy.format.hbt212.model.verify.T212Map;
+import com.xy.format.hbt212.model.expand.T212Map;
 
 import javax.validation.ConstraintValidator;
 
 /**
  * Created by xiaoyao9184 on 2018/1/10.
  */
-public class T212MapNValidator
-        extends T212MapFieldValidator<FieldN,N>
+public class FieldNValidator
+        extends FieldRegexSupportedValidator<FieldN,N>
         implements ConstraintValidator<FieldN,T212Map<String,?>> {
 
-    public T212MapNValidator() {
+    public FieldNValidator() {
         super(new NValidator());
     }
 
